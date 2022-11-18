@@ -6,11 +6,11 @@ buildscript {
         jcenter()
     }
     dependencies {
-        // Navigation Component
-        def nav_version = '2.4.1'
         classpath 'com.android.tools.build:gradle:7.2.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // Navigation Component
         //SafeArgs
+        def nav_version = '2.5.3'
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
         //Hilt
         def hilt_version="2.42"

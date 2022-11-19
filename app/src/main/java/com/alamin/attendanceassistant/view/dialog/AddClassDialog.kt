@@ -34,11 +34,11 @@ class AddClassDialog : DialogFragment() {
 
         binding.setOnClassSubmit {
             classViewModel.createClass()
-            dismiss()
         }
 
         lifecycleScope.launch {
             classViewModel.message.collect{
+                if (it.lowercase() == "Success".lowercase())  dismiss()
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
         }
@@ -52,7 +52,7 @@ class AddClassDialog : DialogFragment() {
             // Set Match Parent for Full Screen Dialog
             val width: Int = ViewGroup.LayoutParams.MATCH_PARENT;
             val height: Int = ViewGroup.LayoutParams.WRAP_CONTENT;
-            dialog!!.window?.setLayout(width, height)
+            it.window?.setLayout(width, height)
         }
     }
 

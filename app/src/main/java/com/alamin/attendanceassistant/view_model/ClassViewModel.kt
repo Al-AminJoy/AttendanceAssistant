@@ -9,8 +9,7 @@ import com.alamin.attendanceassistant.model.data.ClassModel
 import com.alamin.attendanceassistant.model.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -22,6 +21,12 @@ class ClassViewModel @Inject constructor(@ClassQualifier private val repository:
 
     val message = MutableSharedFlow<String>()
     val inputClassName = MutableStateFlow<String>("")
+
+    val classList: StateFlow<List<ClassModel>?> = repository.getAll().stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(),
+        null
+    )
 
     fun createClass(){
         val name: String = inputClassName.value

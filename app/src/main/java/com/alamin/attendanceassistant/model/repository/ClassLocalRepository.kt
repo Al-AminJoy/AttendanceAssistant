@@ -8,7 +8,7 @@ import javax.inject.Inject
 class ClassLocalRepository @Inject constructor(private val localDatabase: LocalDatabase): Repository {
 
     private val classDao = localDatabase.classDao()
-    override suspend fun getAll(): Flow<List<ClassModel>> {
+    override fun getAll(): Flow<List<ClassModel>> {
         return classDao.getAllClass()
     }
 

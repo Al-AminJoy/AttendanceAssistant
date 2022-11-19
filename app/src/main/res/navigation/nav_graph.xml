@@ -8,12 +8,15 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.alamin.attendanceassistant.view.fragment.HomeFragment"
-        android:label="Classes"
+        android:label="Class"
         tools:layout="@layout/fragment_home" >
 
         <action
             android:id="@+id/action_homeFragment_to_addClassDialog"
             app:destination="@id/addClassDialog" />
+        <action
+            android:id="@+id/action_homeFragment_to_sectionFragment"
+            app:destination="@id/sectionFragment" />
     </fragment>
 
     <dialog
@@ -24,4 +27,30 @@
             android:id="@+id/action_addClassDialog_to_homeFragment"
             app:destination="@id/homeFragment" />
     </dialog>
+    <fragment
+        android:id="@+id/sectionFragment"
+        android:name="com.alamin.attendanceassistant.view.fragment.SectionFragment"
+        android:label="Section"
+        tools:layout="@layout/fragment_section" >
+        <argument
+            android:name="classModel"
+            app:argType="com.alamin.attendanceassistant.model.data.ClassModel" />
+        <action
+            android:id="@+id/action_sectionFragment_to_subjectFragment"
+            app:destination="@id/subjectFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/subjectFragment"
+        android:name="com.alamin.attendanceassistant.view.fragment.SubjectFragment"
+        android:label="Subject"
+        tools:layout="@layout/fragment_subject" >
+        <action
+            android:id="@+id/action_subjectFragment_to_attendanceFragment"
+            app:destination="@id/attendanceFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/attendanceFragment"
+        android:name="com.alamin.attendanceassistant.view.fragment.AttendanceFragment"
+        android:label="Attendance"
+        tools:layout="@layout/fragment_attendance" />
 </navigation>

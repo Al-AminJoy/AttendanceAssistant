@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ClassDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+   @Insert(onConflict = OnConflictStrategy.REPLACE)
    suspend fun insertClass(classModel: ClassModel)
 
    @Update

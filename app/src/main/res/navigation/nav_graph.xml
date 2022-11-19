@@ -38,6 +38,9 @@
         <action
             android:id="@+id/action_sectionFragment_to_subjectFragment"
             app:destination="@id/subjectFragment" />
+        <action
+            android:id="@+id/action_sectionFragment_to_addSectionDialog"
+            app:destination="@id/addSectionDialog" />
     </fragment>
     <fragment
         android:id="@+id/subjectFragment"
@@ -47,10 +50,22 @@
         <action
             android:id="@+id/action_subjectFragment_to_attendanceFragment"
             app:destination="@id/attendanceFragment" />
+        <argument
+            android:name="section"
+            app:argType="com.alamin.attendanceassistant.model.data.Section" />
     </fragment>
     <fragment
         android:id="@+id/attendanceFragment"
         android:name="com.alamin.attendanceassistant.view.fragment.AttendanceFragment"
         android:label="Attendance"
         tools:layout="@layout/fragment_attendance" />
+    <dialog
+        android:id="@+id/addSectionDialog"
+        android:name="com.alamin.attendanceassistant.view.dialog.AddSectionDialog"
+        android:label="fragment_add_section_dialog"
+        tools:layout="@layout/fragment_add_section_dialog" >
+        <argument
+            android:name="classModel"
+            app:argType="com.alamin.attendanceassistant.model.data.ClassModel" />
+    </dialog>
 </navigation>

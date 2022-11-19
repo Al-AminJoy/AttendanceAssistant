@@ -5,15 +5,15 @@
     <data>
 
         <import type="com.alamin.attendanceassistant.utils.ApplicationsCallBack.SetOnAdapterItemClickListener"/>
-        <import type="com.alamin.attendanceassistant.model.data.ClassModel"/>
+        <import type="com.alamin.attendanceassistant.model.data.Section"/>
 
         <variable
-            name="setOnAdapterItemClickListener"
+            name="setOnSectionClickListener"
             type="SetOnAdapterItemClickListener" />
 
         <variable
-            name="classModel"
-            type="ClassModel" />
+            name="section"
+            type="Section" />
 
     </data>
 
@@ -25,7 +25,7 @@
             app:cardBackgroundColor="@color/themeSecondary"
             android:layout_marginTop="@dimen/app_margin"
             android:layout_marginEnd="@dimen/app_margin"
-            android:onClick="@{()-> setOnAdapterItemClickListener.onAdapterItemClick(classModel)}">
+            android:onClick="@{()->setOnSectionClickListener.onAdapterItemClick(section)}">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_class"
+                    android:src="@drawable/ic_section"
                     android:layout_gravity="center"
                     android:background="@drawable/circular_bacground"/>
 
@@ -46,7 +46,7 @@
                     android:maxLines="1"
                     android:textSize="@dimen/textSizeL"
                     android:textColor="@color/white"
-                    android:text="@{classModel.className}"
+                    android:text="@{section.sectionName}"
                     android:gravity="center"/>
             </LinearLayout>
 

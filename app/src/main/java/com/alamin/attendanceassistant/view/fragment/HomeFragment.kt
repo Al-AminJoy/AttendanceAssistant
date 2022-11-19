@@ -1,6 +1,7 @@
 package com.alamin.attendanceassistant.view.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,24 +12,22 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.alamin.attendanceassistant.R
 import com.alamin.attendanceassistant.databinding.FragmentHomeBinding
-import com.alamin.attendanceassistant.di.qualifiers.ClassQualifier
 import com.alamin.attendanceassistant.model.data.ClassModel
-import com.alamin.attendanceassistant.model.repository.Repository
-import com.alamin.attendanceassistant.utils.ApplicationsClassBack
+import com.alamin.attendanceassistant.utils.ApplicationsCallBack
 import com.alamin.attendanceassistant.view.adapter.ClassAdapter
 import com.alamin.attendanceassistant.view_model.ClassViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+private const val TAG = "HomeFragment"
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     @Inject
     lateinit var classAdapter: ClassAdapter
 
-    lateinit var classViewModel: ClassViewModel
+    private lateinit var classViewModel: ClassViewModel
 
     private lateinit var binding: FragmentHomeBinding
 
@@ -50,8 +49,8 @@ class HomeFragment : Fragment() {
                 it?.let {
                     with(classAdapter){
                         setDiffUtils(ArrayList(it))
-                        setCallBack(object : ApplicationsClassBack.SetOnClassClickListener{
-                            override fun onClassClick(classModel: ClassModel) {
+                        setCallBack(object : ApplicationsCallBack.SetOnAdapterItemClickListener<ClassModel> {
+                            override fun onAdapterItemClick(classModel: ClassModel) {
                                 val action = HomeFragmentDirections.actionHomeFragmentToSectionFragment(classModel)
                                 findNavController().navigate(action)
                             }

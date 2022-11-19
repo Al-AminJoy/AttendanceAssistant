@@ -1,4 +1,4 @@
-package com.alamin.attendanceassistant.utils
+package com.alamin.attendanceassistant.view.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.alamin.attendanceassistant.model.data.ClassModel

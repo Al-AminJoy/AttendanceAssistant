@@ -32,7 +32,7 @@ class ClassViewModel @Inject constructor(@ClassLocalQualifier private val reposi
 
         viewModelScope.launch {
         if (TextUtils.isEmpty(name) || name == null){
-            message.emit("Insert Class")
+            message.emit("Please, Input Class")
         }else{
             val classModel = ClassModel(0,name)
             message.emit("Success")

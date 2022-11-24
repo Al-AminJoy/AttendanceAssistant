@@ -1,9 +1,11 @@
 package com.alamin.attendanceassistant.model.data
 
 import android.os.Parcelable
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
 @Entity
 @Parcelize
@@ -12,4 +14,5 @@ data class Subject(
     val subjectId:Int,
     val subjectName:String,
     val subjectColor:String,
-    val sectionId:Int):Parcelable
+    val sectionId:Int,
+    var studentHolder: @RawValue StudentHolder):Parcelable

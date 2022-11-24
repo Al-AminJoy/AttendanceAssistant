@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View.OnClickListener"/>
+        <import type="com.alamin.attendanceassistant.view_model.SubjectViewModel"/>
+
+        <variable
+            name="onStudentSubmit"
+            type="OnClickListener" />
+
+
+
+        <variable
+            name="subjectViewModel"
+            type="SubjectViewModel" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".view.dialog.AddStudentDialog"
+        android:padding="@dimen/app_margin"
+        android:orientation="vertical"
+        android:background="@color/themeSecondary">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/textSizeL"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:text="Create Student"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutStudentId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Student ID"
+            app:hintTextColor="@color/theme"
+            app:boxStrokeColor="@color/theme"
+            android:layout_marginTop="@dimen/app_margin"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/padding12dp"
+                android:inputType="numberDecimal"
+                android:textColor="@color/Ash_Gray"
+                android:textSize="@dimen/textSizeM"
+                android:text="@={subjectViewModel.inputStudentId}"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutStudentName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Student Name"
+            app:hintTextColor="@color/theme"
+            app:boxStrokeColor="@color/theme"
+            android:layout_marginTop="@dimen/app_margin"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/padding12dp"
+                android:inputType="text"
+                android:textColor="@color/Ash_Gray"
+                android:textSize="@dimen/textSizeM"
+                android:text="@={subjectViewModel.inputStudentName}"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNameSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/app_margin"
+            android:text="Submit"
+            android:textSize="@dimen/textSizeL"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/theme"
+            android:onClick="@{onStudentSubmit}"/>
+
+    </LinearLayout>
+</layout>

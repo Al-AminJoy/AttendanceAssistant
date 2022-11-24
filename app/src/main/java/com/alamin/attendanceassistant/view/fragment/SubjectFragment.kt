@@ -55,7 +55,6 @@ class SubjectFragment : Fragment() {
                                 val action = SubjectFragmentDirections.actionSubjectFragmentToAttendanceFragment(dataClass)
                                 findNavController().navigate(action)
                             }
-
                         })
                     }
                 }

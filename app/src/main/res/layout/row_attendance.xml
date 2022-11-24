@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="com.alamin.attendanceassistant.model.data.Student"/>
+        <import type="android.widget.RadioGroup"/>
+
+        <variable
+            name="student"
+            type="Student" />
+
+        <variable
+            name="radioGroup"
+            type="RadioGroup" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Al-Amin Joy"
+            android:textColor="@color/Gray"
+            android:textSize="@dimen/textSizeL"
+            android:gravity="center_vertical"
+            android:layout_weight=".55"
+            android:layout_marginHorizontal="@dimen/app_margin"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/theme"
+            android:layout_marginVertical="@dimen/app_margin"/>
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight=".45"
+            android:gravity="center">
+            <RadioButton
+                android:id="@+id/btnPresent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Present"
+                android:buttonTint="@color/theme"/>
+
+            <RadioButton
+                android:id="@+id/btnAbsent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Absent"
+                android:buttonTint="@color/theme"/>
+        </RadioGroup>
+
+
+    </LinearLayout>
+</layout>

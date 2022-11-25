@@ -13,6 +13,10 @@ class AttendanceRepositoryImplementation @Inject constructor(private val localDa
         return attendanceDao.getAttendanceBySubject(subjectId)
     }
 
+    override fun getAttendanceByDateAndSubject(subjectId: Int, attendanceDate: Long): Flow<Attendance> {
+        return attendanceDao.getAttendanceByDateAndSubject(subjectId,attendanceDate)
+    }
+
     override fun getAll(): Flow<List<Attendance>> {
         return attendanceDao.getAllAttendance()
     }

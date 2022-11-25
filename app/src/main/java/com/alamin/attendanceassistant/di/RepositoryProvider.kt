@@ -2,6 +2,7 @@ package com.alamin.attendanceassistant.di
 
 import com.alamin.attendanceassistant.di.qualifiers.*
 import com.alamin.attendanceassistant.model.repository.attendance_repository.AttendanceLocalRepository
+import com.alamin.attendanceassistant.model.repository.attendance_repository.AttendanceRepositoryImplementation
 import com.alamin.attendanceassistant.model.repository.class_repository.ClassLocalRepository
 import com.alamin.attendanceassistant.model.repository.class_repository.ClassLocalRepositoryImplementation
 import com.alamin.attendanceassistant.model.repository.section_repository.SectionLocalRepository
@@ -33,7 +34,7 @@ abstract class RepositoryProvider {
 
     @Binds
     @AttendanceLocalQualifier
-    abstract fun attendanceLocalRepositoryBind(atteLocalRepositoryImplementation: StudentLocalRepositoryImplementation): AttendanceLocalRepository
+    abstract fun attendanceLocalRepositoryBind(attendanceRepositoryImplementation: AttendanceRepositoryImplementation): AttendanceLocalRepository
 
    /* @Binds
     @StudentLocalQualifier

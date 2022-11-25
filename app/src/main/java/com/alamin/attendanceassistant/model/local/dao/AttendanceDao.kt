@@ -21,9 +21,14 @@ interface AttendanceDao {
     @Query("SELECT * FROM Attendance WHERE attendanceId=:attendanceId")
     fun getAttendanceById(attendanceId: Int): Flow<Attendance>
 
+    @Query("SELECT * FROM Attendance WHERE attendanceDate=:attendanceDate AND subjectId=:subjectId")
+    fun getAttendanceByDateAndSubject(subjectId: Int,attendanceDate: Long): Flow<Attendance>
+
     @Query("SELECT * FROM Attendance WHERE subjectId=:subjectId")
     fun getAttendanceBySubject(subjectId: Int): Flow<List<Attendance>>
 
     @Query("SELECT * FROM Attendance")
     fun getAllAttendance(): Flow<List<Attendance>>
+
+
 }

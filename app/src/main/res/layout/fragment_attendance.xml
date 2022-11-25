@@ -11,12 +11,86 @@
             name="onAddStudent"
             type="OnClickListener" />
 
+        <variable
+            name="onDateSelect"
+            type="OnClickListener" />
+
+        <variable
+            name="onAttendanceSubmit"
+            type="OnClickListener" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.fragment.AttendanceFragment">
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSelectDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginVertical="@dimen/app_margin"
+            android:layout_marginHorizontal="@dimen/app_margin"
+            android:text="Select Date"
+            android:textSize="@dimen/textSizeM"
+            android:textAllCaps="false"
+            app:backgroundTint="@color/theme"
+            android:textColor="@color/white"
+            android:padding="@dimen/app_margin"
+            android:gravity="center"
+            app:icon="@drawable/ic_calendar"
+            app:iconGravity="textEnd"
+            android:onClick="@{onDateSelect}"
+            />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardDate"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnSelectDate"
+            app:layout_constraintBottom_toTopOf="@id/btnSubmit"
+            android:layout_marginVertical="@dimen/app_margin"
+            app:cardCornerRadius="@dimen/app_margin"
+            android:layout_marginHorizontal="@dimen/app_margin"
+            app:cardElevation="@dimen/dimen2dp"
+            app:cardBackgroundColor="@color/white">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:itemCount="10"
+                android:padding="@dimen/app_margin"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/row_attendance" />
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginVertical="@dimen/app_margin"
+            android:layout_marginHorizontal="@dimen/app_margin"
+            android:text="Submit"
+            android:textSize="@dimen/textSizeM"
+            android:textAllCaps="false"
+            app:backgroundTint="@color/theme"
+            android:textColor="@color/white"
+            android:padding="@dimen/app_margin"
+            android:gravity="center"
+            android:onClick="@{onAttendanceSubmit}" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"

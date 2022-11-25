@@ -29,6 +29,12 @@ class SubjectViewModel @Inject constructor(@SubjectLocalQualifier private val su
         null
     )
 
+    fun getSubjectById(subjectId:Int): StateFlow<Subject?> = subjectLocalRepository.getById(subjectId).stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(),
+        null
+    )
+
     fun insertSubject(sectionId:Int){
         val subjectName = inputSubjectName.value
 

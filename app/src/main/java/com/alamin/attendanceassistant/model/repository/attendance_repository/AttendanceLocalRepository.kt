@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface AttendanceLocalRepository: CommonRepository<Attendance> {
     fun getAttendanceBySubject(subjectId:Int): Flow<List<Attendance>>
+    fun getAttendanceByDateAndSubject(subjectId: Int,attendanceDate:Long): Flow<Attendance>
 }

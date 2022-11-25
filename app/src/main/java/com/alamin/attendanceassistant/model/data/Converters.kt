@@ -15,4 +15,14 @@ class Converters {
         return Gson().fromJson(studentHolder,StudentHolder::class.java)
     }
 
+    @TypeConverter
+    fun fromAttendanceHolder(studentAttendanceHolder: StudentAttendanceHolder): String{
+        return Gson().toJson(studentAttendanceHolder)
+    }
+
+    @TypeConverter
+    fun toAttendanceHolder(studentAttendanceHolder: String): StudentAttendanceHolder{
+        return Gson().fromJson(studentAttendanceHolder,StudentAttendanceHolder::class.java)
+    }
+
 }

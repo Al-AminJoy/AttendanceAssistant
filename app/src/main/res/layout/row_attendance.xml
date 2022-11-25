@@ -2,12 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-        <import type="com.alamin.attendanceassistant.model.data.Student"/>
+        <import type="com.alamin.attendanceassistant.model.data.StudentAttendance"/>
         <import type="android.widget.RadioGroup"/>
 
         <variable
             name="student"
-            type="Student" />
+            type="StudentAttendance" />
 
         <variable
             name="radioGroup"

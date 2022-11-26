@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -108,6 +109,7 @@ class AttendanceFragment : Fragment() {
                 .setTextColor(resources.getColor(R.color.theme, null))
             datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE)
                 .setTextColor(resources.getColor(R.color.theme, null))
+            datePickerDialog.datePicker.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         }
 
 

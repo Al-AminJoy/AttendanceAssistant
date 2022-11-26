@@ -109,6 +109,7 @@
             app:tint="@color/white"
             android:backgroundTint="@color/theme"
             app:borderWidth="0dp"
+            android:visibility="@{hasDateChosen?View.GONE:View.VISIBLE}"
             android:onClick="@{onAddStudent}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

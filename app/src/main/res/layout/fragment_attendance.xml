@@ -6,6 +6,7 @@
     <data>
 
         <import type="android.view.View.OnClickListener"/>
+        <import type="android.view.View"/>
 
         <variable
             name="onAddStudent"
@@ -19,13 +20,16 @@
             name="onAttendanceSubmit"
             type="OnClickListener" />
 
+        <variable
+            name="hasDateChosen"
+            type="Boolean" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.fragment.AttendanceFragment">
-
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSelectDate"
@@ -60,7 +64,8 @@
             app:cardCornerRadius="@dimen/app_margin"
             android:layout_marginHorizontal="@dimen/app_margin"
             app:cardElevation="@dimen/dimen2dp"
-            app:cardBackgroundColor="@color/white">
+            app:cardBackgroundColor="@color/white"
+            android:visibility="@{hasDateChosen?View.VISIBLE:View.GONE}">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
@@ -90,7 +95,8 @@
             android:textColor="@color/white"
             android:padding="@dimen/app_margin"
             android:gravity="center"
-            android:onClick="@{onAttendanceSubmit}" />
+            android:onClick="@{onAttendanceSubmit}"
+            android:visibility="@{hasDateChosen?View.VISIBLE:View.GONE}" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"

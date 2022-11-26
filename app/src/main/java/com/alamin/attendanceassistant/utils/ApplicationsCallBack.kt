@@ -6,5 +6,9 @@ interface ApplicationsCallBack {
         fun onAdapterItemClick(dataClass: T)
     }
 
+    interface SetOnAttendanceClickListener<T>{
+        fun onAdapterItemClick(dataClass: T,isPresent: Boolean)
+    }
+
 
 }

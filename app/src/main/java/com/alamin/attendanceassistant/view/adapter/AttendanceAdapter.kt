@@ -12,11 +12,12 @@ import javax.inject.Inject
 class AttendanceAdapter @Inject constructor(private val attendanceDiffUtils: AttendanceDiffUtils): RecyclerView.Adapter<AttendanceAdapter.AttendanceViewHolder>() {
 
     private var attendanceList = arrayListOf<StudentAttendance>()
-    private lateinit var adapterItemClickListener: ApplicationsCallBack.SetOnAdapterItemClickListener<StudentAttendance>
+    private lateinit var adapterItemClickListener: ApplicationsCallBack.SetOnAttendanceClickListener<StudentAttendance>
 
     inner class AttendanceViewHolder (val binding: RowAttendanceBinding): RecyclerView.ViewHolder(binding.root){
         fun binding(studentAttendance: StudentAttendance){
             binding.student = studentAttendance
+            binding.setAttendance = adapterItemClickListener
         }
     }
 
@@ -40,7 +41,7 @@ class AttendanceAdapter @Inject constructor(private val attendanceDiffUtils: Att
         diffResult.dispatchUpdatesTo(this)
     }
 
-    fun setAdapterItemClickListener(adapterItemClickListener: ApplicationsCallBack.SetOnAdapterItemClickListener<StudentAttendance>){
+    fun setAdapterItemClickListener(adapterItemClickListener: ApplicationsCallBack.SetOnAttendanceClickListener<StudentAttendance>){
         this.adapterItemClickListener = adapterItemClickListener
     }
 

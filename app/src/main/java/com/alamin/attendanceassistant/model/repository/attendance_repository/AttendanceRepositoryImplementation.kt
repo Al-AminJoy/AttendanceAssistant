@@ -3,6 +3,7 @@ package com.alamin.attendanceassistant.model.repository.attendance_repository
 import com.alamin.attendanceassistant.model.data.Attendance
 import com.alamin.attendanceassistant.model.local.LocalDatabase
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class AttendanceRepositoryImplementation @Inject constructor(private val localDatabase: LocalDatabase): AttendanceLocalRepository {
@@ -13,16 +14,21 @@ class AttendanceRepositoryImplementation @Inject constructor(private val localDa
         return attendanceDao.getAttendanceBySubject(subjectId)
     }
 
-    override fun getAttendanceByDateAndSubject(subjectId: Int, attendanceDate: Long): Flow<Attendance> {
-        return attendanceDao.getAttendanceByDateAndSubject(subjectId,attendanceDate)
+    override fun getAttendanceByAttendanceId(attendanceId: String): Flow<Attendance> {
+        return attendanceDao.getAttendanceById(attendanceId)
     }
+
+    override suspend fun deleteAttendanceId(attendanceId: String) {
+        attendanceDao.deleteAttendance(attendanceId)
+    }
+
 
     override fun getAll(): Flow<List<Attendance>> {
         return attendanceDao.getAllAttendance()
     }
 
     override fun getById(id: Int): Flow<Attendance> {
-        return attendanceDao.getAttendanceById(id)
+        return flow {  }
     }
 
     override suspend fun create(dataClass: Attendance) {
@@ -34,6 +40,6 @@ class AttendanceRepositoryImplementation @Inject constructor(private val localDa
     }
 
     override suspend fun delete(id: Int) {
-        attendanceDao.deleteAttendance(id)
+
     }
 }

@@ -4,14 +4,18 @@
     <data>
         <import type="com.alamin.attendanceassistant.model.data.StudentAttendance"/>
         <import type="android.widget.RadioGroup"/>
+        <import type="com.alamin.attendanceassistant.utils.ApplicationsCallBack.SetOnAttendanceClickListener"/>
+
 
         <variable
             name="student"
             type="StudentAttendance" />
 
         <variable
-            name="radioGroup"
-            type="RadioGroup" />
+            name="setAttendance"
+            type="SetOnAttendanceClickListener" />
+
+
 
     </data>
 
@@ -60,16 +64,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Present"
+                android:checked="@{student.present?true:false}"
                 android:textColor="@color/Gray"
-                android:buttonTint="@color/theme"/>
+                android:buttonTint="@color/theme"
+                android:onClick="@{()->setAttendance.onAdapterItemClick(student,true)}"/>
 
             <RadioButton
                 android:id="@+id/btnAbsent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Absent"
+                android:checked="@{student.present?false:true}"
                 android:textColor="@color/Gray"
-                android:buttonTint="@color/theme"/>
+                android:buttonTint="@color/theme"
+                android:visibility="visible"
+                android:onClick="@{()->setAttendance.onAdapterItemClick(student,false)}"/>
         </RadioGroup>
 
 

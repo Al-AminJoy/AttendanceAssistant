@@ -6,8 +6,7 @@ import kotlinx.parcelize.RawValue
 
 @Entity
 data class Attendance(
-    @PrimaryKey(autoGenerate = true)
-    val attendanceId: Int,
-    val attendanceDate: Long,
+    @PrimaryKey
+    val attendanceId: String,
     val studentAttendanceHolder: @RawValue StudentAttendanceHolder,
     val subjectId:Int)

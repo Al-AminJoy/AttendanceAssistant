@@ -7,4 +7,4 @@ import kotlinx.android.parcel.Parcelize
 data class StudentAttendance(
 val studentId:Int,
 val studentName:String,
-val isPresent: Boolean = false): Parcelable
+var isPresent: Boolean = false): Parcelable

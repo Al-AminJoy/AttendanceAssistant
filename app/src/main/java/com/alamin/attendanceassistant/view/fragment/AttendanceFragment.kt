@@ -3,10 +3,12 @@ package com.alamin.attendanceassistant.view.fragment
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -14,17 +16,23 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alamin.attendanceassistant.R
 import com.alamin.attendanceassistant.databinding.FragmentAttendanceBinding
-import com.alamin.attendanceassistant.model.data.Student
+import com.alamin.attendanceassistant.model.data.Attendance
 import com.alamin.attendanceassistant.model.data.StudentAttendance
+import com.alamin.attendanceassistant.model.data.StudentAttendanceHolder
 import com.alamin.attendanceassistant.model.data.Subject
 import com.alamin.attendanceassistant.utils.AppUtils
+import com.alamin.attendanceassistant.utils.ApplicationsCallBack
 import com.alamin.attendanceassistant.view.adapter.AttendanceAdapter
 import com.alamin.attendanceassistant.view_model.AttendanceViewModel
 import com.alamin.attendanceassistant.view_model.SubjectViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
+
+private const val TAG = "AttendanceFragment"
 
 @AndroidEntryPoint
 class AttendanceFragment : Fragment() {
@@ -35,10 +43,10 @@ class AttendanceFragment : Fragment() {
     private lateinit var subjectViewModel: SubjectViewModel
     private lateinit var attendanceViewModel: AttendanceViewModel
     private val arg by navArgs<AttendanceFragmentArgs>()
-    private var studentAttendanceList = arrayListOf<StudentAttendance>()
     private lateinit var subject: Subject
+    private var studentAttendanceList = arrayListOf<StudentAttendance>()
     private lateinit var calendar: Calendar
-    private var attendanceDate: Long = 0L
+    private var attendanceId: String = ""
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -47,28 +55,43 @@ class AttendanceFragment : Fragment() {
     ): View? {
         binding = FragmentAttendanceBinding.inflate(layoutInflater)
 
+        binding.hasDateChosen = false
+
+        subjectViewModel = ViewModelProvider(this)[SubjectViewModel::class.java]
+        attendanceViewModel = ViewModelProvider(this)[AttendanceViewModel::class.java]
+        calendar = Calendar.getInstance()
+
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = attendanceAdapter
         }
 
-        calendar = Calendar.getInstance()
 
         val dateSetListener =
             DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                 calendar.set(Calendar.YEAR, year)
                 calendar.set(Calendar.MONTH, monthOfYear)
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                attendanceDate = calendar.timeInMillis
+                attendanceId = "${subject.subjectId}_${calendar.get(Calendar.DAY_OF_MONTH)}-${
+                    calendar.get(Calendar.MONTH)
+                }-${
+                    calendar.get(Calendar.YEAR)
+                }"
+
                 binding.btnSelectDate.text =
                     "${calendar.get(Calendar.DAY_OF_MONTH)}-${calendar.get(Calendar.MONTH)}-${
                         calendar.get(Calendar.YEAR)
                     }"
+                binding.hasDateChosen = true
                 getAttendance()
             }
 
 
         binding.setOnDateSelect {
+            if (subject.studentHolder.studentList.isEmpty()){
+                Toast.makeText(requireContext(), "No Student Found", Toast.LENGTH_SHORT).show()
+                return@setOnDateSelect
+            }
             val datePickerDialog = DatePickerDialog(
                 requireContext(),
                 dateSetListener,
@@ -88,21 +111,50 @@ class AttendanceFragment : Fragment() {
         }
 
 
-        subjectViewModel = ViewModelProvider(this)[SubjectViewModel::class.java]
-        attendanceViewModel = ViewModelProvider(this)[AttendanceViewModel::class.java]
+
 
         lifecycleScope.launchWhenCreated {
             subjectViewModel.getSubjectById(arg.subject.subjectId).collectLatest {
                 it?.let {
                     subject = it
-                    //attendanceAdapter.setDiffUtils(studentAttendanceList)
                 }
             }
         }
 
 
 
+        lifecycleScope.launchWhenCreated {
+            attendanceViewModel.studentAttendanceFlowList.collectLatest {
+                it?.let {
+                    with(attendanceAdapter) {
+                        studentAttendanceList.clear()
+                        studentAttendanceList = ArrayList(it)
+                        setAdapterItemClickListener(object :
+                            ApplicationsCallBack.SetOnAttendanceClickListener<StudentAttendance> {
+                            override fun onAdapterItemClick(
+                                dataClass: StudentAttendance,
+                                isPresent: Boolean
+                            ) {
+                                Log.d(TAG, "onAdapterItemClick: $dataClass $isPresent")
+                                val listIndex = studentAttendanceList.indexOf(dataClass)
+                                dataClass.isPresent = isPresent
+                                studentAttendanceList[listIndex] = dataClass
+                            }
+                        })
 
+                        setDiffUtils(ArrayList(studentAttendanceList.sortedBy { studentAttendance -> studentAttendance.studentId }))
+
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launchWhenCreated {
+            attendanceViewModel.message.collect {
+                binding.hasDateChosen = it.lowercase() != "Success".lowercase()
+                Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+            }
+        }
 
         binding.setOnAddStudent {
             val action =
@@ -110,30 +162,31 @@ class AttendanceFragment : Fragment() {
             findNavController().navigate(action)
         }
 
+        binding.setOnAttendanceSubmit {
+            attendanceViewModel.createAttendance(
+                attendanceId,
+                studentAttendanceList,
+                subject.subjectId
+            )
+        }
+
+
+
         return binding.root
     }
 
     private fun getAttendance() {
         lifecycleScope.launchWhenCreated {
-            attendanceViewModel.getAttendanceBySubjectAndDate(subject.subjectId, attendanceDate)
+            attendanceViewModel.getAttendanceById(attendanceId)
                 .collectLatest {
-                    studentAttendanceList.clear()
-
-                    if (it == null || it.studentAttendanceHolder.studentAttendanceList.isEmpty()) {
-                        if (subject.studentHolder.studentList.isNotEmpty()) {
-                            for (student in subject.studentHolder.studentList) {
-                                val studentAttendance =
-                                    StudentAttendance(student.studentId, student.studentName)
-                                studentAttendanceList.add(studentAttendance)
-                            }
-                        }
+                    if (it == null) {
+                        attendanceViewModel.getStudentListOfAttendance(arrayListOf(), subject)
                     } else {
-                        studentAttendanceList.addAll(it.studentAttendanceHolder.studentAttendanceList)
-
+                        attendanceViewModel.getStudentListOfAttendance(
+                            ArrayList(it.studentAttendanceHolder.studentAttendanceList),
+                            subject
+                        )
                     }
-
-                    attendanceAdapter.setDiffUtils(studentAttendanceList)
-
                 }
         }
     }

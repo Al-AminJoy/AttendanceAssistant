@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:textSize="@dimen/textSizeL"
-                    android:textColor="@color/white"
+                    android:textColor="@color/theme"
                     android:text="@{classModel.className}"
                     android:gravity="center"/>
             </LinearLayout>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txtStudent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="1. Al-Amin"
+        android:textStyle="bold"
+        android:padding="@dimen/app_margin"
+        android:textSize="@dimen/textSizeL"
+        android:textColor="@color/Gray"
+        android:background="@color/themeSecondary"
+        android:layout_marginTop="@dimen/dimen2dp"/>
+
+</LinearLayout>

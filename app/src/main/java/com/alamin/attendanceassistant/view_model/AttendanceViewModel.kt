@@ -29,6 +29,14 @@ class AttendanceViewModel @Inject constructor(@AttendanceLocalQualifier private 
             null)
 
 
+    fun getAttendanceBySubject(subjectId:Int): Flow<List<Attendance>?> =
+        attendanceLocalRepository.getAttendanceBySubject(subjectId).stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(),
+            null
+        )
+
+
     fun getStudentListOfAttendance(studentList: ArrayList<StudentAttendance>,subject: Subject) {
 
         val studentAttendanceList  = arrayListOf<StudentAttendance>()

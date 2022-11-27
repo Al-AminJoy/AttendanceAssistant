@@ -41,7 +41,7 @@ class AttendanceHolderFragment : Fragment() {
 
     private fun setupViewPager() {
         attendanceFragment.setSubject(arg.subject.subjectId)
-
+        reportFragment.setSubject(arg.subject.subjectId)
         val fragmentList = arrayListOf(attendanceFragment,reportFragment)
         val fragmentTitleList = arrayListOf("Attendance","Report")
 

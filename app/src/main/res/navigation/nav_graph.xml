@@ -47,27 +47,15 @@
         android:name="com.alamin.attendanceassistant.view.fragment.SubjectFragment"
         android:label="Subject"
         tools:layout="@layout/fragment_subject" >
-        <action
-            android:id="@+id/action_subjectFragment_to_attendanceFragment"
-            app:destination="@id/attendanceFragment" />
         <argument
             android:name="section"
             app:argType="com.alamin.attendanceassistant.model.data.Section" />
         <action
             android:id="@+id/action_subjectFragment_to_addSubjectDialog"
             app:destination="@id/addSubjectDialog" />
-    </fragment>
-    <fragment
-        android:id="@+id/attendanceFragment"
-        android:name="com.alamin.attendanceassistant.view.fragment.AttendanceFragment"
-        android:label="Attendance"
-        tools:layout="@layout/fragment_attendance" >
-        <argument
-            android:name="subject"
-            app:argType="com.alamin.attendanceassistant.model.data.Subject" />
         <action
-            android:id="@+id/action_attendanceFragment_to_addStudentDialog"
-            app:destination="@id/addStudentDialog" />
+            android:id="@+id/action_subjectFragment_to_attendanceHolderFragment"
+            app:destination="@id/attendanceHolderFragment" />
     </fragment>
     <dialog
         android:id="@+id/addSectionDialog"
@@ -94,4 +82,15 @@
             android:name="subject"
             app:argType="com.alamin.attendanceassistant.model.data.Subject" />
     </dialog>
+    <fragment
+        android:id="@+id/attendanceHolderFragment"
+        android:name="com.alamin.attendanceassistant.view.fragment.AttendanceHolderFragment"
+        android:label="Attendance" >
+        <argument
+            android:name="subject"
+            app:argType="com.alamin.attendanceassistant.model.data.Subject" />
+        <action
+            android:id="@+id/action_attendanceHolderFragment_to_addStudentDialog"
+            app:destination="@id/addStudentDialog" />
+    </fragment>
 </navigation>

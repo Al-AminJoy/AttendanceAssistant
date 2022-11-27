@@ -52,7 +52,7 @@ class SubjectFragment : Fragment() {
                         setDiffUtils(ArrayList(it))
                         setSubjectListener(object : ApplicationsCallBack.SetOnAdapterItemClickListener<Subject>{
                             override fun onAdapterItemClick(dataClass: Subject) {
-                                val action = SubjectFragmentDirections.actionSubjectFragmentToAttendanceFragment(dataClass)
+                                val action = SubjectFragmentDirections.actionSubjectFragmentToAttendanceHolderFragment(dataClass)
                                 findNavController().navigate(action)
                             }
                         })

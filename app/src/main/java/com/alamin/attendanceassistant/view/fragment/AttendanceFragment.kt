@@ -36,14 +36,15 @@ import kotlin.collections.ArrayList
 private const val TAG = "AttendanceFragment"
 
 @AndroidEntryPoint
-class AttendanceFragment : Fragment() {
+class AttendanceFragment @Inject constructor() : Fragment() {
     @Inject
     lateinit var attendanceAdapter: AttendanceAdapter
 
     private lateinit var binding: FragmentAttendanceBinding
     private lateinit var subjectViewModel: SubjectViewModel
     private lateinit var attendanceViewModel: AttendanceViewModel
-    private val arg by navArgs<AttendanceFragmentArgs>()
+   // private val arg by navArgs<AttendanceFragmentArgs>()
+    private var subjectId : Int = 0
     private lateinit var subject: Subject
     private var studentAttendanceList = arrayListOf<StudentAttendance>()
     private lateinit var calendar: Calendar
@@ -116,7 +117,7 @@ class AttendanceFragment : Fragment() {
 
 
         lifecycleScope.launchWhenCreated {
-            subjectViewModel.getSubjectById(arg.subject.subjectId).collectLatest {
+            subjectViewModel.getSubjectById(subjectId).collectLatest {
                 it?.let {
                     subject = it
                 }
@@ -160,7 +161,7 @@ class AttendanceFragment : Fragment() {
 
         binding.setOnAddStudent {
             val action =
-                AttendanceFragmentDirections.actionAttendanceFragmentToAddStudentDialog(subject)
+                AttendanceHolderFragmentDirections.actionAttendanceHolderFragmentToAddStudentDialog(subject)
             findNavController().navigate(action)
         }
 
@@ -191,6 +192,10 @@ class AttendanceFragment : Fragment() {
                     }
                 }
         }
+    }
+
+    fun setSubject(subjectId:Int){
+        this.subjectId = subjectId
     }
 
 }

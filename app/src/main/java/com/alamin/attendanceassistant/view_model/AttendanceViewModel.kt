@@ -1,5 +1,6 @@
 package com.alamin.attendanceassistant.view_model
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alamin.attendanceassistant.di.qualifiers.AttendanceLocalQualifier
@@ -14,10 +15,13 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val TAG = "AttendanceViewModel"
+
 @HiltViewModel
 class AttendanceViewModel @Inject constructor(@AttendanceLocalQualifier private val attendanceLocalRepository: AttendanceLocalRepository): ViewModel() {
 
     val message = MutableSharedFlow<String>()
+    val present = MutableSharedFlow<Int>()
 
     var studentAttendanceFlowList: MutableStateFlow<List<StudentAttendance>?> = MutableStateFlow(null)
 
@@ -82,6 +86,29 @@ class AttendanceViewModel @Inject constructor(@AttendanceLocalQualifier private 
             attendanceLocalRepository.create(attendance)
             message.emit("Success")
         }
+    }
+
+    fun calculateAttendance(selectedStudent: Int, studentAttendanceList: ArrayList<Attendance>) {
+
+        var classCount = studentAttendanceList.size
+        var presentCount = 0
+
+        for (attendance in studentAttendanceList){
+
+            for (studentAttendance in attendance.studentAttendanceHolder.studentAttendanceList){
+                if (studentAttendance.studentId == selectedStudent && studentAttendance.isPresent){
+                    presentCount++
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            present.emit(presentCount)
+        }
+
+
+        Log.d(TAG, "onCreateView: $classCount $presentCount")
+
     }
 
 }

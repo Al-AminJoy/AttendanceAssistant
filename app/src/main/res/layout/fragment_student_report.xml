@@ -8,6 +8,22 @@
         <import type="android.view.View.OnClickListener"/>
 
         <variable
+            name="totalClass"
+            type="Integer" />
+
+        <variable
+            name="presentClass"
+            type="Integer" />
+
+        <variable
+            name="absentClass"
+            type="Integer" />
+
+        <variable
+            name="presentPercentage"
+            type="Double" />
+
+        <variable
             name="onStudentClick"
             type="OnClickListener" />
 
@@ -33,10 +49,171 @@
                 android:id="@+id/txtStudent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/Blue_Angel"
+                android:background="@color/Baby_Blue"
                 android:hint="Select Student"
-                android:focusable="false"/>
+                android:focusable="false"
+                android:textColor="@color/white"/>
         </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/app_margin"
+            android:layout_marginHorizontal="@dimen/app_margin"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:padding="@dimen/app_margin"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:background="@drawable/circular_fill_background_4dp"
+                android:backgroundTint="@color/themeSecondary"
+                android:layout_marginEnd="@dimen/app_margin">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_subject"
+                    android:background="@drawable/circular_bacground"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/textSizeL"
+                    android:text="Total Class"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/app_margin"
+                    android:textStyle="bold"
+                    android:textColor="@color/theme"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/textSizeL"
+                    android:text="@{totalClass.toString()+` Days`}"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/app_margin"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:padding="@dimen/app_margin"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:background="@drawable/circular_fill_background_4dp"
+                android:backgroundTint="@color/themeSecondary">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_subject"
+                    android:background="@drawable/circular_bacground"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/textSizeL"
+                    android:text="Present"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/app_margin"
+                    android:textStyle="bold"
+                    android:textColor="@color/theme"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/textSizeL"
+                    android:text="@{presentClass.toString()+` Days`}"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/app_margin"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/app_margin"
+            android:layout_marginHorizontal="@dimen/app_margin"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:padding="@dimen/app_margin"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:background="@drawable/circular_fill_background_4dp"
+                android:backgroundTint="@color/themeSecondary"
+                android:layout_marginEnd="@dimen/app_margin">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_subject"
+                    android:background="@drawable/circular_bacground"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/textSizeL"
+                    android:text="Absent"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/app_margin"
+                    android:textStyle="bold"
+                    android:textColor="@color/theme"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/textSizeL"
+                    android:text="@{absentClass.toString()+` Days`}"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/app_margin"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:padding="@dimen/app_margin"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:background="@drawable/circular_fill_background_4dp"
+                android:backgroundTint="@color/themeSecondary">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_subject"
+                    android:background="@drawable/circular_bacground"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/textSizeL"
+                    android:text="Present Ratio"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/app_margin"
+                    android:textStyle="bold"
+                    android:textColor="@color/theme"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/textSizeL"
+                    android:text="@{presentPercentage.toString()+` %`}"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/app_margin"
+                    />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
 
     </LinearLayout>
 </layout>

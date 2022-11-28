@@ -31,7 +31,7 @@ class StudentReportFragment @Inject constructor() : Fragment() {
     private var subjectId: Int = 0
     private lateinit var subjectViewModel: SubjectViewModel
     private lateinit var attendanceViewModel: AttendanceViewModel
-    private var studentList = arrayListOf<String>()
+    private var studentList = ArrayList<String>()
     private var studentAttendanceList = arrayListOf<Attendance>()
 
 
@@ -42,6 +42,11 @@ class StudentReportFragment @Inject constructor() : Fragment() {
 
         binding = FragmentStudentReportBinding.inflate(layoutInflater)
 
+        binding.totalClass = 0
+        binding.presentClass = 0
+        binding.absentClass = 0
+        binding.presentPercentage = 0.00
+
         subjectViewModel = ViewModelProvider(this)[SubjectViewModel::class.java]
         attendanceViewModel = ViewModelProvider(this)[AttendanceViewModel::class.java]
 
@@ -50,26 +55,24 @@ class StudentReportFragment @Inject constructor() : Fragment() {
         }
 
         binding.txtStudent.setOnItemClickListener { adapterView, view, position, id ->
-            val item = studentList[position]
-            val data = item.split(".")
+
+            val data = studentList[position].split(".")
             val selectedStudent = data[0].toInt()
 
-            var classCount = studentAttendanceList.size
-            var presentCount = 0
+            attendanceViewModel.calculateAttendance(selectedStudent,studentAttendanceList)
 
-            for (attendance in studentAttendanceList){
+        }
 
-                for (studentAttendance in attendance.studentAttendanceHolder.studentAttendanceList){
-                    if (studentAttendance.studentId == selectedStudent && studentAttendance.isPresent){
-                        presentCount++
-                    }
+        lifecycleScope.launchWhenCreated {
+            attendanceViewModel.present.collectLatest {
+                it.let {
+                    val totalClass = studentAttendanceList.size
+                    binding.totalClass = totalClass
+                    binding.presentClass = it
+                    binding.absentClass = totalClass - it
+                    binding.presentPercentage = Math.round(((it.toDouble()/totalClass.toDouble())*100)*100.0)/100.0
                 }
             }
-
-
-            Log.d(TAG, "onCreateView: $classCount $presentCount")
-
-
         }
 
         lifecycleScope.launchWhenCreated {
@@ -84,10 +87,9 @@ class StudentReportFragment @Inject constructor() : Fragment() {
         lifecycleScope.launchWhenCreated {
             subjectViewModel.getSubjectById(subjectId).collectLatest {
                 it?.let {
-                    studentList.clear()
-                    for (student in it.studentHolder.studentList.sortedBy { std -> std.studentId }){
-                        studentList.add("${student.studentId}. ${student.studentName}")
-                    }
+                    studentList = ArrayList(it.studentHolder.studentList
+                        .sortedBy { std -> std.studentId }
+                        .map { student -> "${student.studentId}. ${student.studentName}" })
 
                     var studentAdapter = ArrayAdapter(requireContext(),R.layout.row_student_dropdown,R.id.txtStudent,studentList)
                     binding.txtStudent.setAdapter(studentAdapter)

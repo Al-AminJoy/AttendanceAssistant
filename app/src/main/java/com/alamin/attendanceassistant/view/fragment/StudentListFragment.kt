@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alamin.attendanceassistant.R
 import com.alamin.attendanceassistant.databinding.FragmentStudentListBinding
@@ -55,6 +56,10 @@ class StudentListFragment @Inject constructor() : Fragment() {
                         setAdapterClickListener(object : ApplicationsCallBack.SetOnStudentClickListener<Student>{
                             override fun onAdapterItemClick(dataClass: Student, isUpdate: Boolean) {
                                 Log.d(TAG, "onAdapterItemClick: $dataClass $isUpdate")
+                                if(isUpdate){
+                                    val action = AttendanceHolderFragmentDirections.actionAttendanceHolderFragmentToAddStudentDialog(it,dataClass)
+                                    findNavController().navigate(action)
+                                }
                             }
 
                         })

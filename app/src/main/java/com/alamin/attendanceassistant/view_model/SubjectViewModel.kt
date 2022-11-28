@@ -81,4 +81,42 @@ class SubjectViewModel @Inject constructor(@SubjectLocalQualifier private val su
         }
     }
 
+    fun setStudentData(student: Student) {
+        inputStudentId.value = student.studentId.toString()
+        inputStudentName.value = student.studentName
+    }
+
+    fun updateStudentBySubject(removableStudent:Student,subject: Subject) {
+        val studentId = inputStudentId.value
+        val studentName = inputStudentName.value
+
+        viewModelScope.launch {
+            if (TextUtils.isEmpty(studentId) || studentId == null ){
+                message.emit("Please, Input Student ID")
+            }else if(studentId.toInt() == 0){
+                message.emit("Please, Input Valid ID")
+            }else if (TextUtils.isEmpty(studentName) || studentName == null){
+                message.emit("Please, Input Student Name")
+            }else{
+
+                withContext(IO){
+                    val student = Student(studentId.toInt(),studentName)
+
+                    val studentList = arrayListOf<Student>()
+
+                    var removedStudentList = (ArrayList(subject.studentHolder.studentList))
+                    removedStudentList.remove(removableStudent)
+                    studentList.addAll(removedStudentList)
+                    studentList.add(student)
+                    val studentHolder = StudentHolder(studentList)
+                    subject.studentHolder = studentHolder
+
+                    subjectLocalRepository.update(subject)
+                }
+
+                message.emit("Success")
+            }
+        }
+    }
+
 }

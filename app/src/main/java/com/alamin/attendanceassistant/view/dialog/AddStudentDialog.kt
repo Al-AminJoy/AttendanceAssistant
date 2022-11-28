@@ -1,7 +1,6 @@
 package com.alamin.attendanceassistant.view.dialog
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +9,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
-import com.alamin.attendanceassistant.R
 import com.alamin.attendanceassistant.databinding.FragmentAddStudentDialogBinding
+import com.alamin.attendanceassistant.view_model.AttendanceViewModel
+import com.alamin.attendanceassistant.view_model.StudentViewModel
 import com.alamin.attendanceassistant.view_model.SubjectViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -21,6 +21,7 @@ class AddStudentDialog : DialogFragment() {
 
     private lateinit var binding: FragmentAddStudentDialogBinding
     private lateinit var subjectViewModel: SubjectViewModel
+    private lateinit var attendanceViewModel: AttendanceViewModel
     private val arg by navArgs<AddStudentDialogArgs>()
 
     override fun onCreateView(
@@ -35,8 +36,18 @@ class AddStudentDialog : DialogFragment() {
         binding.subjectViewModel = subjectViewModel
         binding.lifecycleOwner = this
 
+        if (arg.student != null){
+            arg.student?.let {
+                subjectViewModel.setStudentData(it)
+            }
+        }
+
         binding.setOnStudentSubmit {
-            subjectViewModel.insertStudentBySubject(arg.subject)
+            if (arg.student == null){
+                subjectViewModel.insertStudentBySubject(arg.subject)
+            }else{
+                subjectViewModel.updateStudentBySubject(arg.student!!,arg.subject)
+            }
         }
 
         lifecycleScope.launch {

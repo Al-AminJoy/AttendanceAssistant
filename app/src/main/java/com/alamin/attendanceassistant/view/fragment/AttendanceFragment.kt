@@ -160,7 +160,7 @@ class AttendanceFragment @Inject constructor() : Fragment() {
 
         binding.setOnAddStudent {
             val action =
-                AttendanceHolderFragmentDirections.actionAttendanceHolderFragmentToAddStudentDialog(subject)
+                AttendanceHolderFragmentDirections.actionAttendanceHolderFragmentToAddStudentDialog(subject,null)
             findNavController().navigate(action)
         }
 

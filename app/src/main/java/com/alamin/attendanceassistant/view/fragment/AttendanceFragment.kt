@@ -43,7 +43,6 @@ class AttendanceFragment @Inject constructor() : Fragment() {
     private lateinit var binding: FragmentAttendanceBinding
     private lateinit var subjectViewModel: SubjectViewModel
     private lateinit var attendanceViewModel: AttendanceViewModel
-   // private val arg by navArgs<AttendanceFragmentArgs>()
     private var subjectId : Int = 0
     private lateinit var subject: Subject
     private var studentAttendanceList = arrayListOf<StudentAttendance>()

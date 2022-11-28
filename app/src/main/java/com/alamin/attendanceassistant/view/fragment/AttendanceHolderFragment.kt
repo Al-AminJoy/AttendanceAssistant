@@ -23,6 +23,8 @@ class AttendanceHolderFragment : Fragment() {
     @Inject
     lateinit var reportFragment: StudentReportFragment
     @Inject
+    lateinit var studentListFragment: StudentListFragment
+    @Inject
     lateinit var viewPagerAdapter: ViewPagerAdapter
 
     private lateinit var binding: FragmentAttendanceHolderBinding
@@ -42,8 +44,10 @@ class AttendanceHolderFragment : Fragment() {
     private fun setupViewPager() {
         attendanceFragment.setSubject(arg.subject.subjectId)
         reportFragment.setSubject(arg.subject.subjectId)
-        val fragmentList = arrayListOf(attendanceFragment,reportFragment)
-        val fragmentTitleList = arrayListOf("Attendance","Report")
+        studentListFragment.setSubject(arg.subject.subjectId)
+
+        val fragmentList = arrayListOf(attendanceFragment,reportFragment,studentListFragment)
+        val fragmentTitleList = arrayListOf("Attendance","Report","Students")
 
         viewPagerAdapter.addFragment(fragmentList, fragmentTitleList)
 

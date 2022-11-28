@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.alamin.attendanceassistant.model.data.Student"/>
+        <import type="com.alamin.attendanceassistant.utils.ApplicationsCallBack.SetOnStudentClickListener"/>
+
+        <variable
+            name="student"
+            type="Student" />
+
+        <variable
+            name="setOnStudentClickListener"
+            type="SetOnStudentClickListener" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/app_margin"
+        android:background="@color/themeSecondary"
+        android:layout_marginEnd="@dimen/app_margin"
+        android:layout_marginBottom="@dimen/app_margin"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/textSizeL"
+            android:text="@{student.studentId+`.`}"
+            android:padding="@dimen/app_margin"
+            android:layout_weight=".15"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/textSizeL"
+            android:text="@{student.studentName}"
+            android:padding="@dimen/app_margin"
+            android:layout_weight=".65"
+            android:gravity="start"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_remove"
+            android:layout_gravity="center"
+            app:tint="@color/theme"
+            android:layout_weight=".10"
+            android:onClick="@{()-> setOnStudentClickListener.onAdapterItemClick(student,false)}"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_edit"
+            android:layout_gravity="center"
+            app:tint="@color/theme"
+            android:onClick="@{()-> setOnStudentClickListener.onAdapterItemClick(student,true)}"
+            android:layout_weight=".10"/>
+
+    </LinearLayout>
+</layout>

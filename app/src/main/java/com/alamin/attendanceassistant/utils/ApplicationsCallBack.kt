@@ -10,5 +10,9 @@ interface ApplicationsCallBack {
         fun onAdapterItemClick(dataClass: T,isPresent: Boolean)
     }
 
+    interface SetOnStudentClickListener<T>{
+        fun onAdapterItemClick(dataClass: T,isUpdate: Boolean)
+
+    }
 
 }

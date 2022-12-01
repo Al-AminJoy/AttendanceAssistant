@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alamin.attendanceassistant.R
 import com.alamin.attendanceassistant.databinding.FragmentStudentListBinding
 import com.alamin.attendanceassistant.model.data.Student
+import com.alamin.attendanceassistant.model.data.Subject
 import com.alamin.attendanceassistant.utils.ApplicationsCallBack
 import com.alamin.attendanceassistant.view.adapter.StudentAdapter
 import com.alamin.attendanceassistant.view_model.StudentViewModel
@@ -33,7 +34,7 @@ class StudentListFragment @Inject constructor() : Fragment() {
 
     private lateinit var subjectViewModel: SubjectViewModel
 
-    private var subjectId : Int = 0
+    private lateinit var subject: Subject
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,10 +50,11 @@ class StudentListFragment @Inject constructor() : Fragment() {
         }
 
         lifecycleScope.launchWhenCreated {
-            subjectViewModel.getSubjectById(subjectId).collectLatest {
+            subjectViewModel.getSubjectById(subject.subjectId).collectLatest {
                 it?.let {
                     with(studentAdapter){
-                        setStudentDiffUtils(ArrayList(it.studentHolder.studentList))
+                        Log.d(TAG, "onCreateView: $it")
+                        setStudentDiffUtils(ArrayList(it.studentHolder.studentList.sortedBy { it.studentId }))
                         setAdapterClickListener(object : ApplicationsCallBack.SetOnStudentClickListener<Student>{
                             override fun onAdapterItemClick(dataClass: Student, isUpdate: Boolean) {
                                 Log.d(TAG, "onAdapterItemClick: $dataClass $isUpdate")
@@ -71,6 +73,10 @@ class StudentListFragment @Inject constructor() : Fragment() {
         return binding.root
     }
 
-    fun setSubject(subjectId:Int){
-        this.subjectId = subjectId
-    }}
+    fun setSubject(subject: Subject){
+        this.subject = subject
+        if (studentAdapter != null){
+            studentAdapter.setStudentDiffUtils(ArrayList(subject.studentHolder.studentList.sortedBy { it.studentId }))
+        }
+    }
+}

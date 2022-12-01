@@ -43,7 +43,7 @@ class AttendanceFragment @Inject constructor() : Fragment() {
     private lateinit var binding: FragmentAttendanceBinding
     private lateinit var subjectViewModel: SubjectViewModel
     private lateinit var attendanceViewModel: AttendanceViewModel
-    private var subjectId : Int = 0
+    //private var subjectId : Int = 0
     private lateinit var subject: Subject
     private var studentAttendanceList = arrayListOf<StudentAttendance>()
     private lateinit var calendar: Calendar
@@ -115,13 +115,13 @@ class AttendanceFragment @Inject constructor() : Fragment() {
 
 
 
-        lifecycleScope.launchWhenCreated {
+        /*lifecycleScope.launchWhenCreated {
             subjectViewModel.getSubjectById(subjectId).collectLatest {
                 it?.let {
                     subject = it
                 }
             }
-        }
+        }*/
 
 
 
@@ -158,11 +158,11 @@ class AttendanceFragment @Inject constructor() : Fragment() {
             }
         }
 
-        binding.setOnAddStudent {
+        /*binding.setOnAddStudent {
             val action =
                 AttendanceHolderFragmentDirections.actionAttendanceHolderFragmentToAddStudentDialog(subject,null)
             findNavController().navigate(action)
-        }
+        }*/
 
         binding.setOnAttendanceSubmit {
             attendanceViewModel.createAttendance(
@@ -193,8 +193,8 @@ class AttendanceFragment @Inject constructor() : Fragment() {
         }
     }
 
-    fun setSubject(subjectId:Int){
-        this.subjectId = subjectId
+    fun setSubject(subject: Subject){
+        this.subject = subject
     }
 
 }

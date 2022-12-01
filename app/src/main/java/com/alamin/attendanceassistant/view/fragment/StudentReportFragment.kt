@@ -15,6 +15,7 @@ import com.alamin.attendanceassistant.databinding.FragmentAttendanceHolderBindin
 import com.alamin.attendanceassistant.databinding.FragmentStudentReportBinding
 import com.alamin.attendanceassistant.model.data.Attendance
 import com.alamin.attendanceassistant.model.data.StudentAttendance
+import com.alamin.attendanceassistant.model.data.Subject
 import com.alamin.attendanceassistant.view.adapter.ViewPagerAdapter
 import com.alamin.attendanceassistant.view_model.AttendanceViewModel
 import com.alamin.attendanceassistant.view_model.SubjectViewModel
@@ -28,7 +29,8 @@ private const val TAG = "StudentReportFragment"
 class StudentReportFragment @Inject constructor() : Fragment() {
 
     private lateinit var binding: FragmentStudentReportBinding
-    private var subjectId: Int = 0
+   // private var subjectId: Int = 0
+   private lateinit var subject: Subject
     private lateinit var subjectViewModel: SubjectViewModel
     private lateinit var attendanceViewModel: AttendanceViewModel
     private var studentList = ArrayList<String>()
@@ -76,7 +78,7 @@ class StudentReportFragment @Inject constructor() : Fragment() {
         }
 
         lifecycleScope.launchWhenCreated {
-            attendanceViewModel.getAttendanceBySubject(subjectId).collectLatest { 
+            attendanceViewModel.getAttendanceBySubject(subject.subjectId).collectLatest {
                 it?.let {
                     studentAttendanceList.clear()
                     studentAttendanceList.addAll(it)
@@ -85,7 +87,7 @@ class StudentReportFragment @Inject constructor() : Fragment() {
         }
 
         lifecycleScope.launchWhenCreated {
-            subjectViewModel.getSubjectById(subjectId).collectLatest {
+            subjectViewModel.getSubjectById(subject.subjectId).collectLatest {
                 it?.let {
                     studentList = ArrayList(it.studentHolder.studentList
                         .sortedBy { std -> std.studentId }
@@ -100,8 +102,8 @@ class StudentReportFragment @Inject constructor() : Fragment() {
         return binding.root
     }
 
-    fun setSubject(subjectId: Int){
-        this.subjectId = subjectId
+    fun setSubject(subject: Subject){
+        this.subject = subject
     }
 
 }

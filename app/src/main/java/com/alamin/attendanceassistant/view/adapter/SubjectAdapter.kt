@@ -13,12 +13,18 @@ class SubjectAdapter @Inject constructor(private val subjectDiffUtils: SubjectDi
 
     private var subjectList = arrayListOf<Subject>()
     private lateinit var setOnAdapterItemClickListener: ApplicationsCallBack.SetOnAdapterItemClickListener<Subject>
+    private lateinit var setOnAdapterOptionItemClickListener: ApplicationsCallBack.SetOnAdapterOptionItemClickListener<Subject>
 
     inner class SubjectViewHolder(private val binding: RowSubjectBinding): RecyclerView.ViewHolder(binding.root){
         fun binding(subject: Subject){
             binding.subject = subject
             binding.setOnSubjectClickListener = setOnAdapterItemClickListener
+            binding.setOnAdapterOptionItemClickListener = setOnAdapterOptionItemClickListener
+            binding.setOnOptionClickListener {
+                setOnAdapterOptionItemClickListener.onAdapterOptionItemClick(subject,it)
+            }
         }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectViewHolder {
@@ -43,6 +49,10 @@ class SubjectAdapter @Inject constructor(private val subjectDiffUtils: SubjectDi
 
     fun setSubjectListener(setOnAdapterItemClickListener: ApplicationsCallBack.SetOnAdapterItemClickListener<Subject>){
         this.setOnAdapterItemClickListener = setOnAdapterItemClickListener
+    }
+
+    fun setSubjectOptionListener(setOnAdapterOptionItemClickListener: ApplicationsCallBack.SetOnAdapterOptionItemClickListener<Subject>){
+        this.setOnAdapterOptionItemClickListener = setOnAdapterOptionItemClickListener
     }
 
 }

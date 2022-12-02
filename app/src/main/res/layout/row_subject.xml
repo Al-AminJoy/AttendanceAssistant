@@ -5,15 +5,24 @@
     <data>
 
         <import type="com.alamin.attendanceassistant.utils.ApplicationsCallBack.SetOnAdapterItemClickListener"/>
+        <import type="com.alamin.attendanceassistant.utils.ApplicationsCallBack.SetOnAdapterOptionItemClickListener"/>
         <import type="com.alamin.attendanceassistant.model.data.Subject"/>
 
         <variable
             name="setOnSubjectClickListener"
             type="SetOnAdapterItemClickListener" />
 
+            <variable
+             name="setOnAdapterOptionItemClickListener"
+             type="SetOnAdapterOptionItemClickListener" />
+
         <variable
             name="subject"
             type="Subject" />
+
+        <variable
+            name="onOptionClickListener"
+            type="android.view.View.OnClickListener"/>
 
     </data>
 
@@ -24,30 +33,46 @@
             app:cardElevation="@dimen/dimen2dp"
             app:cardBackgroundColor="@color/themeSecondary"
             android:layout_marginTop="@dimen/app_margin"
-            android:layout_marginEnd="@dimen/app_margin"
-            android:onClick="@{()->setOnSubjectClickListener.onAdapterItemClick(subject)}">
+            android:layout_marginEnd="@dimen/app_margin">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="@dimen/app_margin">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/app_margin"
+                android:onClick="@{()->setOnSubjectClickListener.onAdapterItemClick(subject)}">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="95"
+                    >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_subject"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circular_bacground"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:textSize="@dimen/textSizeL"
+                        android:textColor="@color/theme"
+                        android:text="@{subject.subjectName}"
+                        android:gravity="center"/>
+                </LinearLayout>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_subject"
-                    android:layout_gravity="center"
-                    android:background="@drawable/circular_bacground"/>
+                    android:src="@drawable/ic_more"
+                    app:tint="@color/theme"
+                    android:layout_gravity="center_vertical"
+                    android:onClick="@{onOptionClickListener}"/>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:textSize="@dimen/textSizeL"
-                    android:textColor="@color/theme"
-                    android:text="@{subject.subjectName}"
-                    android:gravity="center"/>
             </LinearLayout>
 
 

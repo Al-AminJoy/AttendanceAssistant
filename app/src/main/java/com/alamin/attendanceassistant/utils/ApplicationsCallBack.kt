@@ -1,5 +1,7 @@
 package com.alamin.attendanceassistant.utils
 
+import android.view.View
+
 interface ApplicationsCallBack {
 
     interface SetOnAdapterItemClickListener<T>{
@@ -8,6 +10,10 @@ interface ApplicationsCallBack {
 
     interface SetOnAttendanceClickListener<T>{
         fun onAdapterItemClick(dataClass: T,isPresent: Boolean)
+    }
+
+    interface SetOnAdapterOptionItemClickListener<T>{
+        fun onAdapterOptionItemClick(dataClass: T,view:View)
     }
 
     interface SetOnStudentClickListener<T>{

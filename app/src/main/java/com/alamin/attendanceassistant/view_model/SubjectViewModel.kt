@@ -119,4 +119,19 @@ class SubjectViewModel @Inject constructor(@SubjectLocalQualifier private val su
         }
     }
 
+    fun removeStudent(dataClass: Student, subject: Subject) {
+
+        viewModelScope.launch  {
+            withContext(IO){
+                var studentList = (ArrayList(subject.studentHolder.studentList))
+                studentList.remove(dataClass)
+                val studentHolder = StudentHolder(studentList)
+                subject.studentHolder = studentHolder
+                subjectLocalRepository.update(subject)
+            }
+            message.emit("Success")
+
+        }
+    }
+
 }

@@ -15,4 +15,9 @@ interface ApplicationsCallBack {
 
     }
 
+    interface SetOnAlertDialogClickListener{
+        fun onPositive()
+        fun onNegative()
+    }
+
 }

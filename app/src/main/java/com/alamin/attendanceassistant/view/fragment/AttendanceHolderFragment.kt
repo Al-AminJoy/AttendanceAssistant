@@ -53,8 +53,6 @@ class AttendanceHolderFragment : Fragment() {
             subjectViewModel.getSubjectById(arg.subject.subjectId).collectLatest {
                 it?.let {
                     subject = it
-                    Log.d(TAG, "onCreateView: $subject")
-
                     attendanceFragment.setSubject(subject)
                     reportFragment.setSubject(subject)
                     studentListFragment.setSubject(subject)
@@ -74,8 +72,6 @@ class AttendanceHolderFragment : Fragment() {
     }
 
     private fun setupViewPager() {
-
-
         val fragmentList = arrayListOf(attendanceFragment,reportFragment,studentListFragment)
         val fragmentTitleList = arrayListOf("Attendance","Report","Students")
 

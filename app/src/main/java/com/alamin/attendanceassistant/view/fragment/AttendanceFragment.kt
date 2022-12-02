@@ -112,19 +112,6 @@ class AttendanceFragment @Inject constructor() : Fragment() {
             datePickerDialog.datePicker.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         }
 
-
-
-
-        /*lifecycleScope.launchWhenCreated {
-            subjectViewModel.getSubjectById(subjectId).collectLatest {
-                it?.let {
-                    subject = it
-                }
-            }
-        }*/
-
-
-
         lifecycleScope.launchWhenCreated {
             attendanceViewModel.studentAttendanceFlowList.collectLatest {
                 it?.let {
@@ -137,7 +124,6 @@ class AttendanceFragment @Inject constructor() : Fragment() {
                                 dataClass: StudentAttendance,
                                 isPresent: Boolean
                             ) {
-                                Log.d(TAG, "onAdapterItemClick: $dataClass $isPresent")
                                 val listIndex = studentAttendanceList.indexOf(dataClass)
                                 dataClass.isPresent = isPresent
                                 studentAttendanceList[listIndex] = dataClass
@@ -158,11 +144,6 @@ class AttendanceFragment @Inject constructor() : Fragment() {
             }
         }
 
-        /*binding.setOnAddStudent {
-            val action =
-                AttendanceHolderFragmentDirections.actionAttendanceHolderFragmentToAddStudentDialog(subject,null)
-            findNavController().navigate(action)
-        }*/
 
         binding.setOnAttendanceSubmit {
             attendanceViewModel.createAttendance(

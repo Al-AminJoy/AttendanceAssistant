@@ -1,11 +1,15 @@
 package com.alamin.attendanceassistant.view.fragment
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -15,10 +19,12 @@ import com.alamin.attendanceassistant.databinding.FragmentStudentListBinding
 import com.alamin.attendanceassistant.model.data.Student
 import com.alamin.attendanceassistant.model.data.Subject
 import com.alamin.attendanceassistant.utils.ApplicationsCallBack
+import com.alamin.attendanceassistant.utils.CustomAlertDialog
 import com.alamin.attendanceassistant.view.adapter.StudentAdapter
 import com.alamin.attendanceassistant.view_model.StudentViewModel
 import com.alamin.attendanceassistant.view_model.SubjectViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
@@ -29,6 +35,9 @@ class StudentListFragment @Inject constructor() : Fragment() {
 
     @Inject
     lateinit var studentAdapter: StudentAdapter
+
+    @Inject
+    lateinit var customAlertDialog: CustomAlertDialog
 
     private lateinit var binding: FragmentStudentListBinding
 
@@ -52,15 +61,37 @@ class StudentListFragment @Inject constructor() : Fragment() {
         lifecycleScope.launchWhenCreated {
             subjectViewModel.getSubjectById(subject.subjectId).collectLatest {
                 it?.let {
-                    with(studentAdapter){
-                        Log.d(TAG, "onCreateView: $it")
+                    with(studentAdapter) {
                         setStudentDiffUtils(ArrayList(it.studentHolder.studentList.sortedBy { it.studentId }))
-                        setAdapterClickListener(object : ApplicationsCallBack.SetOnStudentClickListener<Student>{
+                        setAdapterClickListener(object :
+                            ApplicationsCallBack.SetOnStudentClickListener<Student> {
                             override fun onAdapterItemClick(dataClass: Student, isUpdate: Boolean) {
-                                Log.d(TAG, "onAdapterItemClick: $dataClass $isUpdate")
-                                if(isUpdate){
-                                    val action = AttendanceHolderFragmentDirections.actionAttendanceHolderFragmentToAddStudentDialog(it,dataClass)
+                                if (isUpdate) {
+                                    val action =
+                                        AttendanceHolderFragmentDirections.actionAttendanceHolderFragmentToAddStudentDialog(
+                                            it,
+                                            dataClass
+                                        )
                                     findNavController().navigate(action)
+                                } else {
+                                    customAlertDialog.createDialog("Warning!",
+                                        "Do You Want to Remove ?",
+                                        R.color.theme,
+                                        object :
+                                            ApplicationsCallBack.SetOnAlertDialogClickListener {
+                                            override fun onPositive() {
+                                                subjectViewModel.removeStudent(dataClass, subject)
+                                            }
+
+                                            override fun onNegative() {
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    "Cancelled",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
+                                            }
+
+                                        })
                                 }
                             }
 
@@ -73,9 +104,9 @@ class StudentListFragment @Inject constructor() : Fragment() {
         return binding.root
     }
 
-    fun setSubject(subject: Subject){
+    fun setSubject(subject: Subject) {
         this.subject = subject
-        if (studentAdapter != null){
+        if (studentAdapter != null) {
             studentAdapter.setStudentDiffUtils(ArrayList(subject.studentHolder.studentList.sortedBy { it.studentId }))
         }
     }

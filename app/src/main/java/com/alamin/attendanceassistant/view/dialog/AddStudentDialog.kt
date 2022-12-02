@@ -21,7 +21,6 @@ class AddStudentDialog : DialogFragment() {
 
     private lateinit var binding: FragmentAddStudentDialogBinding
     private lateinit var subjectViewModel: SubjectViewModel
-    private lateinit var attendanceViewModel: AttendanceViewModel
     private val arg by navArgs<AddStudentDialogArgs>()
 
     override fun onCreateView(
@@ -39,6 +38,7 @@ class AddStudentDialog : DialogFragment() {
         if (arg.student != null){
             arg.student?.let {
                 subjectViewModel.setStudentData(it)
+                binding.layoutStudentId.isEnabled = false
             }
         }
 

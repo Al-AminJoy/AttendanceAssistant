@@ -34,7 +34,7 @@
             android:textSize="@dimen/textSizeL"
             android:textColor="@color/theme"
             android:textStyle="bold"
-            android:text="Create Student"/>
+            android:text="Student Information"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layoutStudentId"
@@ -47,6 +47,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             >
             <com.google.android.material.textfield.TextInputEditText
+
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="@dimen/padding12dp"

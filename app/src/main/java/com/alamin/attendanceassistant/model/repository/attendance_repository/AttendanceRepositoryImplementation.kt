@@ -22,6 +22,10 @@ class AttendanceRepositoryImplementation @Inject constructor(private val localDa
         attendanceDao.deleteAttendance(attendanceId)
     }
 
+    override suspend fun deleteAttendanceBuSubjectId(subjectId: Int) {
+        attendanceDao.deleteAttendanceBySubject(subjectId)
+    }
+
 
     override fun getAll(): Flow<List<Attendance>> {
         return attendanceDao.getAllAttendance()

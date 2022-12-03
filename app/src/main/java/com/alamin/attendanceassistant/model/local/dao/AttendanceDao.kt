@@ -19,6 +19,9 @@ interface AttendanceDao {
     @Query("DELETE FROM Attendance WHERE attendanceId=:attendanceId")
     suspend fun deleteAttendance(attendanceId:String)
 
+    @Query("DELETE FROM Attendance WHERE subjectId=:subjectId")
+    suspend fun deleteAttendanceBySubject(subjectId:Int)
+
     @Query("SELECT * FROM Attendance WHERE attendanceId=:attendanceId")
     fun getAttendanceById(attendanceId: String): Flow<Attendance>
 

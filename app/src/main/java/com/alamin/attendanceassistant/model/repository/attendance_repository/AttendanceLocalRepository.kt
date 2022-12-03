@@ -8,4 +8,5 @@ interface AttendanceLocalRepository: CommonRepository<Attendance> {
     fun getAttendanceBySubject(subjectId:Int): Flow<List<Attendance>>
     fun getAttendanceByAttendanceId(attendanceId:String): Flow<Attendance>
     suspend fun deleteAttendanceId(attendanceId:String)
+    suspend fun deleteAttendanceBuSubjectId(subjectId:Int)
 }

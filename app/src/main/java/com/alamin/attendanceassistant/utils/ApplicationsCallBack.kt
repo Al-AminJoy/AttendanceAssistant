@@ -26,4 +26,9 @@ interface ApplicationsCallBack {
         fun onNegative()
     }
 
+    interface SetOnOptionMenuClickListener{
+        fun onEdit()
+        fun onDelete()
+    }
+
 }

@@ -134,4 +134,13 @@ class SubjectViewModel @Inject constructor(@SubjectLocalQualifier private val su
         }
     }
 
+    fun deleteSubject(subjectId: Int) {
+        viewModelScope.launch {
+            withContext(IO){
+                subjectLocalRepository.delete(subjectId)
+            }
+            message.emit("Success")
+        }
+    }
+
 }

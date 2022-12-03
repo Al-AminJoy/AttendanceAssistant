@@ -111,4 +111,10 @@ class AttendanceViewModel @Inject constructor(@AttendanceLocalQualifier private 
 
     }
 
+    fun deleteAttendanceBySubject(subjectId:Int){
+        viewModelScope.launch {
+            attendanceLocalRepository.deleteAttendanceBuSubjectId(subjectId)
+        }
+    }
+
 }

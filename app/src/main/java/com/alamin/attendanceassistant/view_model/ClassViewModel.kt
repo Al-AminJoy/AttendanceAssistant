@@ -44,4 +44,14 @@ class ClassViewModel @Inject constructor(@ClassLocalQualifier private val reposi
         }
     }
 
+    fun deleteClass(classId: Int) {
+            viewModelScope.launch {
+                withContext(IO){
+                    repository.delete(classId)
+                }
+                message.emit("Success")
+            }
+
+    }
+
 }

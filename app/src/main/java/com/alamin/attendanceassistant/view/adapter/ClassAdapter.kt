@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.alamin.attendanceassistant.databinding.RowClassBinding
 import com.alamin.attendanceassistant.model.data.ClassModel
+import com.alamin.attendanceassistant.model.data.Subject
 import com.alamin.attendanceassistant.utils.ApplicationsCallBack
 import javax.inject.Inject
 
@@ -13,11 +14,16 @@ class ClassAdapter @Inject constructor(private val classDiffUtils: ClassDiffUtil
 
     private var  classList = arrayListOf<ClassModel>()
     private lateinit var setOnAdapterItemClickListener: ApplicationsCallBack.SetOnAdapterItemClickListener<ClassModel>
+    private lateinit var setOnAdapterOptionItemClickListener: ApplicationsCallBack.SetOnAdapterOptionItemClickListener<ClassModel>
+
 
     inner class ClassViewHolder(private val binding: RowClassBinding): RecyclerView.ViewHolder(binding.root){
             fun binding(classModel: ClassModel){
                 binding.classModel = classModel
                 binding.setOnAdapterItemClickListener = setOnAdapterItemClickListener
+                binding.setOnOptionClickListener {
+                    setOnAdapterOptionItemClickListener.onAdapterOptionItemClick(classModel,it)
+                }
             }
     }
 
@@ -43,6 +49,10 @@ class ClassAdapter @Inject constructor(private val classDiffUtils: ClassDiffUtil
 
     fun setCallBack(setOnAdapterItemClickListener: ApplicationsCallBack.SetOnAdapterItemClickListener<ClassModel>){
         this.setOnAdapterItemClickListener = setOnAdapterItemClickListener
+    }
+
+    fun setClassOptionListener(setOnAdapterOptionItemClickListener: ApplicationsCallBack.SetOnAdapterOptionItemClickListener<ClassModel>){
+        this.setOnAdapterOptionItemClickListener = setOnAdapterOptionItemClickListener
     }
 
 }

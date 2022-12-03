@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.alamin.attendanceassistant.databinding.RowSectionBinding
 import com.alamin.attendanceassistant.model.data.ClassModel
 import com.alamin.attendanceassistant.model.data.Section
+import com.alamin.attendanceassistant.model.data.Subject
 import com.alamin.attendanceassistant.utils.ApplicationsCallBack
 import javax.inject.Inject
 
@@ -14,11 +15,16 @@ class SectionAdapter @Inject constructor(private val sectionDiffUtils: SectionDi
 
     private var sectionList = arrayListOf<Section>()
     private lateinit var setOnAdapterItemClickListener: ApplicationsCallBack.SetOnAdapterItemClickListener<Section>
+    private lateinit var setOnAdapterOptionItemClickListener: ApplicationsCallBack.SetOnAdapterOptionItemClickListener<Section>
+
 
     inner class SectionViewHolder(val binding: RowSectionBinding): RecyclerView.ViewHolder(binding.root){
         fun binding(section:Section){
             binding.section = section
             binding.setOnSectionClickListener = setOnAdapterItemClickListener
+            binding.setOnOptionClickListener {
+                setOnAdapterOptionItemClickListener.onAdapterOptionItemClick(section,it)
+            }
         }
     }
 
@@ -44,5 +50,9 @@ class SectionAdapter @Inject constructor(private val sectionDiffUtils: SectionDi
 
     fun setCallBack(setOnAdapterItemClickListener: ApplicationsCallBack.SetOnAdapterItemClickListener<Section>){
         this.setOnAdapterItemClickListener = setOnAdapterItemClickListener
+    }
+
+    fun setSectionOptionListener(setOnAdapterOptionItemClickListener: ApplicationsCallBack.SetOnAdapterOptionItemClickListener<Section>){
+        this.setOnAdapterOptionItemClickListener = setOnAdapterOptionItemClickListener
     }
 }

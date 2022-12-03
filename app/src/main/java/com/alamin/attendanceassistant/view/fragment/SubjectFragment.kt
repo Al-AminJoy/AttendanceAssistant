@@ -22,6 +22,7 @@ import com.alamin.attendanceassistant.view_model.SubjectViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -57,7 +58,7 @@ class SubjectFragment : Fragment() {
             adapter = subjectAdapter
         }
 
-        lifecycleScope.launchWhenCreated {
+        lifecycleScope.launch {
             subjectViewModel.message.collect{
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }

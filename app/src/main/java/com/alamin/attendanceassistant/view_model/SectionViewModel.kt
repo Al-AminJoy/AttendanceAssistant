@@ -50,4 +50,13 @@ class SectionViewModel @Inject constructor(@SectionLocalQualifier private val se
         }
     }
 
+    fun deleteSection(sectionId: Int) {
+        viewModelScope.launch {
+            withContext(IO){
+                sectionLocalRepository.delete(sectionId)
+            }
+            message.emit("Success")
+        }
+    }
+
 }

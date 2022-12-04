@@ -22,6 +22,7 @@ import com.alamin.attendanceassistant.view.adapter.ClassAdapter
 import com.alamin.attendanceassistant.view_model.ClassViewModel
 import com.alamin.attendanceassistant.view_model.SectionViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
@@ -116,6 +117,7 @@ class HomeFragment : Fragment() {
                     Log.d(TAG, "hasSubject: ${it.size}")
                     if (it.isEmpty()){
                         classViewModel.deleteClass(dataClass.classId)
+                        this.cancel()
                     }else{
                         Toast.makeText(
                             requireContext(),
@@ -123,6 +125,7 @@ class HomeFragment : Fragment() {
                             Toast.LENGTH_SHORT
                         )
                             .show()
+                        this.cancel()
                     }
                 }
             }

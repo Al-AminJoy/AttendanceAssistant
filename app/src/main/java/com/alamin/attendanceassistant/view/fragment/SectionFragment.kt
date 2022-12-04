@@ -24,6 +24,7 @@ import com.alamin.attendanceassistant.view_model.SectionViewModel
 import com.alamin.attendanceassistant.view_model.SubjectViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -126,6 +127,7 @@ class SectionFragment : Fragment() {
                         Log.d(TAG, "hasSubject: ${it.size}")
                         if (it.isEmpty()){
                             sectionViewModel.deleteSection(dataClass.sectionId)
+                            this.cancel()
                         }else{
                             Toast.makeText(
                                 requireContext(),
@@ -133,6 +135,7 @@ class SectionFragment : Fragment() {
                                 Toast.LENGTH_SHORT
                             )
                                 .show()
+                            this.cancel()
                         }
                     }
                 }

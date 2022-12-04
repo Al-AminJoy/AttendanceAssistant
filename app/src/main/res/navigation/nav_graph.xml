@@ -72,7 +72,16 @@
         android:label="AddSubjectDialog" >
         <argument
             android:name="section"
-            app:argType="com.alamin.attendanceassistant.model.data.Section" />
+            app:argType="com.alamin.attendanceassistant.model.data.Section"
+            app:nullable="true"
+            android:defaultValue="@null"/>
+        <argument
+            android:name="subject"
+            app:argType="com.alamin.attendanceassistant.model.data.Subject"
+            app:nullable="true"
+            android:defaultValue="@null" />
+
+
     </dialog>
     <dialog
         android:id="@+id/addStudentDialog"

@@ -1,6 +1,7 @@
 package com.alamin.attendanceassistant.view.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val TAG = "SubjectFragment"
 
 @AndroidEntryPoint
 class SubjectFragment : Fragment() {
@@ -49,7 +51,7 @@ class SubjectFragment : Fragment() {
         attendanceViewModel = ViewModelProvider(this)[AttendanceViewModel::class.java]
 
         binding.setOnAddSubjectClick {
-            val action = SubjectFragmentDirections.actionSubjectFragmentToAddSubjectDialog(arg.section)
+            val action = SubjectFragmentDirections.actionSubjectFragmentToAddSubjectDialog(arg.section,null)
             findNavController().navigate(action)
         }
 
@@ -65,10 +67,10 @@ class SubjectFragment : Fragment() {
         }
 
         lifecycleScope.launchWhenCreated {
-            subjectViewModel.getSubjectBySection(arg.section.sectionId).collectLatest {
-                it?.let {
+            subjectViewModel.getSubjectBySection(arg.section.sectionId).collectLatest { subjects ->
+                Log.d(TAG, "onCreateView: $subjects")
+                subjects?.let {
                     with(subjectAdapter){
-                        setDiffUtils(ArrayList(it))
                         setSubjectListener(object : ApplicationsCallBack.SetOnAdapterItemClickListener<Subject>{
                             override fun onAdapterItemClick(dataClass: Subject) {
                                 val action = SubjectFragmentDirections.actionSubjectFragmentToAttendanceHolderFragment(dataClass)
@@ -78,35 +80,41 @@ class SubjectFragment : Fragment() {
 
                         setSubjectOptionListener(object : ApplicationsCallBack.SetOnAdapterOptionItemClickListener<Subject>{
                             override fun onAdapterOptionItemClick(dataClass: Subject, view: View) {
-                              customOptionMenu.showOptionMenu(view.context,view,object : ApplicationsCallBack.SetOnOptionMenuClickListener{
-                                  override fun onEdit() {
+                                customOptionMenu.showOptionMenu(view.context,view,object : ApplicationsCallBack.SetOnOptionMenuClickListener{
+                                    override fun onEdit() {
+                                        val action = SubjectFragmentDirections.actionSubjectFragmentToAddSubjectDialog(null,dataClass)
+                                        findNavController().navigate(action)
+                                    }
 
-                                  }
+                                    override fun onDelete() {
+                                        customAlertDialog.createDialog("Warning !",
+                                            "Do You Want to Remove Subject ?",
+                                            R.color.theme,
+                                            object : ApplicationsCallBack.SetOnAlertDialogClickListener{
+                                                override fun onPositive() {
+                                                    subjectViewModel.deleteSubject(dataClass.subjectId)
+                                                    attendanceViewModel.deleteAttendanceBySubject(dataClass.subjectId)
+                                                }
 
-                                  override fun onDelete() {
-                                      customAlertDialog.createDialog("Warning !",
-                                          "Do You Want to Remove Subject ?",
-                                          R.color.theme,
-                                          object : ApplicationsCallBack.SetOnAlertDialogClickListener{
-                                              override fun onPositive() {
-                                                  subjectViewModel.deleteSubject(dataClass.subjectId)
-                                                  attendanceViewModel.deleteAttendanceBySubject(dataClass.subjectId)
-                                              }
+                                                override fun onNegative() {
+                                                    Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show()
+                                                }
 
-                                              override fun onNegative() {
-                                                  Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show()
-                                              }
+                                            })
+                                    }
 
-                                          })
-                                  }
-
-                              })
+                                })
                             }
 
 
                         })
-                    }
+
+                        setDiffUtils(ArrayList(it))
+
+
                 }
+            }
+
             }
         }
 

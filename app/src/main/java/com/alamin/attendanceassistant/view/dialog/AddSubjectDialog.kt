@@ -33,8 +33,16 @@ class AddSubjectDialog : DialogFragment() {
         binding.subjectViewModel = subjectViewModel
         binding.lifecycleOwner = this
 
+        if (arg.section == null){
+            arg.subject?.let { subjectViewModel.setSubject(it) }
+        }
+
         binding.setOnSubjectSubmit {
-            subjectViewModel.insertSubject(arg.section.sectionId)
+            if (arg.section == null){
+                arg.subject?.let { sub -> subjectViewModel.updateSubject(sub) }
+            }else{
+                arg.section?.let { sec -> subjectViewModel.insertSubject(sec.sectionId) }
+            }
         }
 
         lifecycleScope.launch {

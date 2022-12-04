@@ -12,7 +12,7 @@ import kotlinx.parcelize.RawValue
 data class Subject(
     @PrimaryKey(autoGenerate = true)
     val subjectId:Int,
-    val subjectName:String,
+    var subjectName:String,
     val subjectColor:String,
     val sectionId:Int,
     var studentHolder: @RawValue StudentHolder):Parcelable

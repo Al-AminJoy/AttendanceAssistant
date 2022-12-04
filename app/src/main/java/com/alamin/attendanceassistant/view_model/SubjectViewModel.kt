@@ -22,12 +22,20 @@ class SubjectViewModel @Inject constructor(@SubjectLocalQualifier private val su
     val inputStudentId = MutableStateFlow<String>("")
     val inputStudentName = MutableStateFlow<String>("")
     val message = MutableSharedFlow<String>()
+    val convertedFlow = MutableStateFlow<List<Subject>?>(null)
 
-    fun getSubjectBySection(sectionId:Int): StateFlow<List<Subject>?> = subjectLocalRepository.getSubjectBySection(sectionId).stateIn(
+    fun getSubjectBySection(sectionId:Int): StateFlow<List<Subject>?> = subjectLocalRepository
+        .getSubjectBySection(sectionId).stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(),
         null
     )
+
+    fun convertData(){
+        viewModelScope.launch {
+
+        }
+    }
 
     fun getSubjectById(subjectId:Int): StateFlow<Subject?> = subjectLocalRepository.getById(subjectId).stateIn(
         viewModelScope,
@@ -139,6 +147,25 @@ class SubjectViewModel @Inject constructor(@SubjectLocalQualifier private val su
             withContext(IO){
                 subjectLocalRepository.delete(subjectId)
             }
+            message.emit("Success")
+        }
+    }
+
+    fun setSubject(subject: Subject) {
+        inputSubjectName.value = subject.subjectName
+    }
+
+    fun updateSubject(subject: Subject){
+        val subjectName = inputSubjectName.value
+        viewModelScope.launch {
+            //withContext(IO){
+                if (TextUtils.isEmpty(subjectName) || subjectName == null){
+                    message.emit("Please, Input Subject name")
+                }else{
+                    subject.subjectName = subjectName
+                    subjectLocalRepository.update(subject)
+                }
+          //  }
             message.emit("Success")
         }
     }

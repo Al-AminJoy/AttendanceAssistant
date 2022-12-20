@@ -26,6 +26,11 @@
         <action
             android:id="@+id/action_addClassDialog_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <argument
+            android:name="classModel"
+            app:argType="com.alamin.attendanceassistant.model.data.ClassModel"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </dialog>
     <fragment
         android:id="@+id/sectionFragment"
@@ -64,7 +69,14 @@
         tools:layout="@layout/fragment_add_section_dialog" >
         <argument
             android:name="classModel"
-            app:argType="com.alamin.attendanceassistant.model.data.ClassModel" />
+            app:argType="com.alamin.attendanceassistant.model.data.ClassModel"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="section"
+            app:argType="com.alamin.attendanceassistant.model.data.Section"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </dialog>
     <dialog
         android:id="@+id/addSubjectDialog"

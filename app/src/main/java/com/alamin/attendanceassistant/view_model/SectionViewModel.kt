@@ -59,4 +59,23 @@ class SectionViewModel @Inject constructor(@SectionLocalQualifier private val se
         }
     }
 
+    fun setSection(section: Section) {
+        inputSectionName.value = section.sectionName
+    }
+
+    fun updateSection(section: Section) {
+        val sectionName = inputSectionName.value
+        viewModelScope.launch {
+            if (TextUtils.isEmpty(sectionName) || sectionName == null){
+                message.emit("Please, Input Section name")
+            }else{
+                section.sectionName = sectionName
+                withContext(IO){
+                sectionLocalRepository.update(section) }
+
+            }
+            message.emit("Success")
+        }
+    }
+
 }

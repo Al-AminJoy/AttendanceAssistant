@@ -9,4 +9,4 @@ import kotlinx.parcelize.Parcelize
 data class ClassModel(
     @PrimaryKey(autoGenerate = true)
     val classId:Int,
-    val className:String):Parcelable
+    var className:String):Parcelable

@@ -10,5 +10,5 @@ import kotlinx.parcelize.Parcelize
 data class Section(
     @PrimaryKey(autoGenerate = true)
     val sectionId:Int,
-    val sectionName:String,
+    var sectionName:String,
     val classId:Int):Parcelable

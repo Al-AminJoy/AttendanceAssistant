@@ -55,7 +55,7 @@ class SectionFragment : Fragment() {
         subjectViewModel = ViewModelProvider(this)[SubjectViewModel::class.java]
 
         binding.setOnAddSectionClick {
-            val action = SectionFragmentDirections.actionSectionFragmentToAddSectionDialog(arg.classModel)
+            val action = SectionFragmentDirections.actionSectionFragmentToAddSectionDialog(arg.classModel, null)
             findNavController().navigate(action)
         }
 
@@ -87,7 +87,8 @@ class SectionFragment : Fragment() {
                             override fun onAdapterOptionItemClick(dataClass: Section, view: View) {
                                 customOptionMenu.showOptionMenu(view.context,view,object : ApplicationsCallBack.SetOnOptionMenuClickListener{
                                     override fun onEdit() {
-
+                                        val action = SectionFragmentDirections.actionSectionFragmentToAddSectionDialog(null,dataClass)
+                                        findNavController().navigate(action)
                                     }
 
                                     override fun onDelete() {

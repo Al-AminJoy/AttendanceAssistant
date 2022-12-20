@@ -35,8 +35,17 @@ class AddSectionDialog : DialogFragment() {
         binding.sectionViewModel = sectionViewModel
         binding.lifecycleOwner = this
 
+        if (arg.classModel == null){
+            arg.section?.let { sectionViewModel.setSection(it) }
+        }
+
         binding.setOnSectionSubmit {
-            sectionViewModel.insertSection(arg.classModel.classId)
+            if (arg.classModel == null){
+                arg.section?.let { sec -> sectionViewModel.updateSection(sec) }
+
+            }else{
+                arg.classModel?.let { classModel -> sectionViewModel.insertSection(classModel.classId) }
+            }
         }
 
         lifecycleScope.launch {

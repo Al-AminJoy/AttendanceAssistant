@@ -73,7 +73,8 @@ class HomeFragment : Fragment() {
                             override fun onAdapterOptionItemClick(dataClass: ClassModel, view: View) {
                                 customOptionMenu.showOptionMenu(view.context,view,object : ApplicationsCallBack.SetOnOptionMenuClickListener{
                                     override fun onEdit() {
-
+                                        val action = HomeFragmentDirections.actionHomeFragmentToAddClassDialog(dataClass)
+                                        findNavController().navigate(action)
                                     }
 
                                     override fun onDelete() {
@@ -104,7 +105,8 @@ class HomeFragment : Fragment() {
         }
 
         binding.setOnAddClassClick {
-            findNavController().navigate(R.id.action_homeFragment_to_addClassDialog)
+            val action = HomeFragmentDirections.actionHomeFragmentToAddClassDialog(null)
+            findNavController().navigate(action)
         }
 
         return binding.root

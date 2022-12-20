@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import com.alamin.attendanceassistant.R
 import com.alamin.attendanceassistant.databinding.FragmentAddClassDialogBinding
 import com.alamin.attendanceassistant.databinding.FragmentHomeBinding
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 class AddClassDialog : DialogFragment() {
     lateinit var classViewModel: ClassViewModel
     private lateinit var binding: FragmentAddClassDialogBinding
+    private val arg by navArgs<AddClassDialogArgs>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,8 +34,17 @@ class AddClassDialog : DialogFragment() {
         binding.classViewModel = classViewModel
         binding.lifecycleOwner = this
 
+        if (arg.classModel != null){
+            arg.classModel?.let { it -> classViewModel.setClass(it)  }
+        }
+
         binding.setOnClassSubmit {
-            classViewModel.createClass()
+            if (arg.classModel == null){
+                classViewModel.createClass()
+            }else{
+                arg.classModel?.let { it -> classViewModel.updateClass(it)  }
+
+            }
         }
 
         lifecycleScope.launch {

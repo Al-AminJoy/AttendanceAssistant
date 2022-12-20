@@ -22,7 +22,6 @@ class SubjectViewModel @Inject constructor(@SubjectLocalQualifier private val su
     val inputStudentId = MutableStateFlow<String>("")
     val inputStudentName = MutableStateFlow<String>("")
     val message = MutableSharedFlow<String>()
-    val convertedFlow = MutableStateFlow<List<Subject>?>(null)
 
     fun getSubjectBySection(sectionId:Int): StateFlow<List<Subject>?> = subjectLocalRepository
         .getSubjectBySection(sectionId).stateIn(
@@ -31,11 +30,6 @@ class SubjectViewModel @Inject constructor(@SubjectLocalQualifier private val su
         null
     )
 
-    fun convertData(){
-        viewModelScope.launch {
-
-        }
-    }
 
     fun getSubjectById(subjectId:Int): StateFlow<Subject?> = subjectLocalRepository.getById(subjectId).stateIn(
         viewModelScope,

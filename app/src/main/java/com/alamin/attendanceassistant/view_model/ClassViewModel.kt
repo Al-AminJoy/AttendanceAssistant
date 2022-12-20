@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alamin.attendanceassistant.di.qualifiers.ClassLocalQualifier
 import com.alamin.attendanceassistant.model.data.ClassModel
+import com.alamin.attendanceassistant.model.data.Subject
 import com.alamin.attendanceassistant.model.repository.class_repository.ClassLocalRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
@@ -52,6 +53,25 @@ class ClassViewModel @Inject constructor(@ClassLocalQualifier private val reposi
                 message.emit("Success")
             }
 
+    }
+
+    fun setClass(classModel: ClassModel) {
+        inputClassName.value = classModel.className
+    }
+
+    fun updateClass(classModel: ClassModel){
+        val className = inputClassName.value
+        viewModelScope.launch {
+            if (TextUtils.isEmpty(className) || className == null){
+                message.emit("Please, Input Class name")
+            }else{
+                classModel.className = className
+                withContext(IO){
+                repository.update(classModel)
+            }
+        }
+            message.emit("Success")
+        }
     }
 
 }

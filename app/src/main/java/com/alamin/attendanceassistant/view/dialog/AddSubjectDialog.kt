@@ -34,22 +34,25 @@ class AddSubjectDialog : DialogFragment() {
         binding.subjectViewModel = subjectViewModel
         binding.lifecycleOwner = this
 
-        if (arg.section == null){
+        if (arg.sectionId == 0){
             arg.subject?.let { subjectViewModel.setSubject(it) }
         }
 
         binding.setOnSubjectSubmit {
-            if (arg.section == null){
+            if (arg.sectionId == 0){
                 arg.subject?.let { sub -> subjectViewModel.updateSubject(sub) }
             }else{
-                arg.section?.let { sec -> subjectViewModel.insertSubject(sec.sectionId) }
+                arg.sectionId?.let { sec -> subjectViewModel.insertSubject(sec) }
             }
         }
 
         lifecycleScope.launch {
             subjectViewModel.message.collect{
                 if (it.lowercase() == "Success".lowercase()) {
-                    findNavController().navigate(R.id.action_addSubjectDialog_to_subjectFragment)
+                    if (arg.sectionId == 0){
+                        val action = AddSubjectDialogDirections.actionAddSubjectDialogToSubjectFragment(arg.subject!!.sectionId)
+                        findNavController().navigate(action)
+                    }
                     dismiss()
                 }
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()

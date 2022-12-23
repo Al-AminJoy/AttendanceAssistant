@@ -54,10 +54,9 @@
         android:label="Subject"
         tools:layout="@layout/fragment_subject" >
         <argument
-            android:name="section"
-            app:argType="com.alamin.attendanceassistant.model.data.Section"
-            app:nullable="true"
-            android:defaultValue="@null"/>
+            android:name="sectionId"
+            app:argType="integer"
+            android:defaultValue="0"/>
         <action
             android:id="@+id/action_subjectFragment_to_addSubjectDialog"
             app:destination="@id/addSubjectDialog" />
@@ -92,10 +91,9 @@
         android:name="com.alamin.attendanceassistant.view.dialog.AddSubjectDialog"
         android:label="AddSubjectDialog" >
         <argument
-            android:name="section"
-            app:argType="com.alamin.attendanceassistant.model.data.Section"
-            app:nullable="true"
-            android:defaultValue="@null"/>
+            android:name="sectionId"
+            app:argType="integer"
+            android:defaultValue="0"/>
         <argument
             android:name="subject"
             app:argType="com.alamin.attendanceassistant.model.data.Subject"
@@ -121,19 +119,23 @@
             android:defaultValue="@null"/>
         <action
             android:id="@+id/action_addStudentDialog_to_attendanceHolderFragment"
-            app:destination="@id/attendanceHolderFragment" />
+            app:destination="@id/attendanceHolderFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/attendanceHolderFragment"/>
     </dialog>
     <fragment
         android:id="@+id/attendanceHolderFragment"
         android:name="com.alamin.attendanceassistant.view.fragment.AttendanceHolderFragment"
         android:label="Attendance" >
         <argument
-            android:name="subject"
-            app:nullable="true"
-            android:defaultValue="@null"
-            app:argType="com.alamin.attendanceassistant.model.data.Subject" />
+            android:name="subjectId"
+             app:argType="integer"
+            android:defaultValue="0"/>
         <action
             android:id="@+id/action_attendanceHolderFragment_to_addStudentDialog"
             app:destination="@id/addStudentDialog" />
+        <action
+            android:id="@+id/action_attendanceHolderFragment_to_subjectFragment"
+            app:destination="@id/subjectFragment" />
     </fragment>
 </navigation>

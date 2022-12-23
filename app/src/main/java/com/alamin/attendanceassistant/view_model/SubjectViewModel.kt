@@ -152,14 +152,14 @@ class SubjectViewModel @Inject constructor(@SubjectLocalQualifier private val su
     fun updateSubject(subject: Subject){
         val subjectName = inputSubjectName.value
         viewModelScope.launch {
-            //withContext(IO){
                 if (TextUtils.isEmpty(subjectName) || subjectName == null){
                     message.emit("Please, Input Subject name")
                 }else{
                     subject.subjectName = subjectName
+                    withContext(IO){
                     subjectLocalRepository.update(subject)
                 }
-          //  }
+            }
             message.emit("Success")
         }
     }

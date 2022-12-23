@@ -49,9 +49,9 @@ class AttendanceHolderFragment : Fragment() {
 
         subjectViewModel = ViewModelProvider(this)[SubjectViewModel::class.java]
 
-        arg.subject?.let {
-            lifecycleScope.launchWhenCreated {
-                subjectViewModel.getSubjectById(arg.subject!!.subjectId).collectLatest {
+        lifecycleScope.launchWhenCreated {
+                arg.subjectId?.let {
+                subjectViewModel.getSubjectById(arg.subjectId).collectLatest {
                     it?.let {
                         subject = it
                         attendanceFragment.setSubject(subject)
@@ -68,22 +68,30 @@ class AttendanceHolderFragment : Fragment() {
             findNavController().navigate(action)
         }
 
+
         setupViewPager()
+
 
         return binding.root
     }
 
     private fun setupViewPager() {
+
         val fragmentList = arrayListOf(attendanceFragment,reportFragment,studentListFragment)
         val fragmentTitleList = arrayListOf("Attendance","Report","Students")
 
         viewPagerAdapter.addFragment(fragmentList, fragmentTitleList)
 
-        binding.pager.apply {
-            adapter = viewPagerAdapter
-            currentItem = 0
-        }
+        try {
+            binding.pager.apply {
+                adapter = viewPagerAdapter
+                currentItem = 0
+            }
 
+        }catch (e: java.lang.Exception){
+            Log.d(TAG, "setupViewPager: $e")
+        }
+        
         TabLayoutMediator(binding.tabLayout, binding.pager) { tab, position ->
             tab.text = viewPagerAdapter.getTabTitle(position)
         }.attach()    }

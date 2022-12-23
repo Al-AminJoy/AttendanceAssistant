@@ -85,7 +85,7 @@ class SectionFragment : Fragment() {
                                 override fun onAdapterItemClick(dataClass: Section) {
                                     Log.d(TAG, "onCreateView: $dataClass")
 
-                                    val action = SectionFragmentDirections.actionSectionFragmentToSubjectFragment(dataClass)
+                                    val action = SectionFragmentDirections.actionSectionFragmentToSubjectFragment(dataClass.sectionId)
                                     findNavController().navigate(action)
                                 }
 

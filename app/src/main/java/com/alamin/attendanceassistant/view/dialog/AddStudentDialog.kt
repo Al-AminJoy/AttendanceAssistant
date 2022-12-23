@@ -55,7 +55,8 @@ class AddStudentDialog : DialogFragment() {
         lifecycleScope.launch {
             subjectViewModel.message.collect{
                 if (it.lowercase() == "Success".lowercase()) {
-                    findNavController().navigate(R.id.action_addStudentDialog_to_attendanceHolderFragment)
+                    val action = AddStudentDialogDirections.actionAddStudentDialogToAttendanceHolderFragment(arg.subject.subjectId)
+                    findNavController().navigate(action)
                     dismiss()}
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }

@@ -54,9 +54,9 @@ class SubjectFragment : Fragment() {
 
 
         binding.setOnAddSubjectClick {
-            arg.section?.let {
+            arg.sectionId?.let {
                 val action = SubjectFragmentDirections.actionSubjectFragmentToAddSubjectDialog(
-                    arg.section,
+                    arg.sectionId,
                     null
                 )
                 findNavController().navigate(action)
@@ -75,8 +75,8 @@ class SubjectFragment : Fragment() {
         }
 
         lifecycleScope.launchWhenCreated {
-            arg.section?.let {
-                subjectViewModel.getSubjectBySection(arg.section!!.sectionId)
+            arg.sectionId?.let {
+                subjectViewModel.getSubjectBySection(arg.sectionId)
                     .collectLatest { subjects ->
                         Log.d(TAG, "onCreateView: $subjects")
                         subjects?.let {
@@ -86,7 +86,7 @@ class SubjectFragment : Fragment() {
                                     override fun onAdapterItemClick(dataClass: Subject) {
                                         val action =
                                             SubjectFragmentDirections.actionSubjectFragmentToAttendanceHolderFragment(
-                                                dataClass
+                                                dataClass.subjectId
                                             )
                                         findNavController().navigate(action)
                                     }
@@ -106,7 +106,7 @@ class SubjectFragment : Fragment() {
                                                 override fun onEdit() {
                                                     val action =
                                                         SubjectFragmentDirections.actionSubjectFragmentToAddSubjectDialog(
-                                                            null,
+                                                            0,
                                                             dataClass
                                                         )
                                                     findNavController().navigate(action)

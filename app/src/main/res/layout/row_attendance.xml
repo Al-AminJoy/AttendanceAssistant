@@ -32,7 +32,7 @@
             android:textColor="@color/Gray"
             android:textSize="@dimen/textSizeL"
             android:gravity="center_vertical"
-            android:layout_weight=".05"
+            android:layout_weight=".10"
             android:layout_marginHorizontal="@dimen/app_margin"/>
 
 
@@ -57,7 +57,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_weight=".50"
+            android:layout_weight=".45"
             android:gravity="center">
             <RadioButton
                 android:id="@+id/btnPresent"

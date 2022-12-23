@@ -38,8 +38,9 @@
         android:label="Section"
         tools:layout="@layout/fragment_section" >
         <argument
-            android:name="classModel"
-            app:argType="com.alamin.attendanceassistant.model.data.ClassModel" />
+            android:name="classId"
+            app:argType="integer"
+            android:defaultValue="0" />
         <action
             android:id="@+id/action_sectionFragment_to_subjectFragment"
             app:destination="@id/subjectFragment" />
@@ -54,7 +55,9 @@
         tools:layout="@layout/fragment_subject" >
         <argument
             android:name="section"
-            app:argType="com.alamin.attendanceassistant.model.data.Section" />
+            app:argType="com.alamin.attendanceassistant.model.data.Section"
+            app:nullable="true"
+            android:defaultValue="@null"/>
         <action
             android:id="@+id/action_subjectFragment_to_addSubjectDialog"
             app:destination="@id/addSubjectDialog" />
@@ -67,16 +70,22 @@
         android:name="com.alamin.attendanceassistant.view.dialog.AddSectionDialog"
         android:label="fragment_add_section_dialog"
         tools:layout="@layout/fragment_add_section_dialog" >
+
         <argument
-            android:name="classModel"
-            app:argType="com.alamin.attendanceassistant.model.data.ClassModel"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            android:name="classId"
+            app:argType="integer"
+            android:defaultValue="0" />
         <argument
             android:name="section"
             app:argType="com.alamin.attendanceassistant.model.data.Section"
             app:nullable="true"
             android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_addSectionDialog_to_sectionFragment"
+            app:destination="@id/sectionFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/sectionFragment"/>
+
     </dialog>
     <dialog
         android:id="@+id/addSubjectDialog"
@@ -92,6 +101,9 @@
             app:argType="com.alamin.attendanceassistant.model.data.Subject"
             app:nullable="true"
             android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_addSubjectDialog_to_subjectFragment"
+            app:destination="@id/subjectFragment" />
 
 
     </dialog>
@@ -107,6 +119,9 @@
             app:argType="com.alamin.attendanceassistant.model.data.Student"
             app:nullable="true"
             android:defaultValue="@null"/>
+        <action
+            android:id="@+id/action_addStudentDialog_to_attendanceHolderFragment"
+            app:destination="@id/attendanceHolderFragment" />
     </dialog>
     <fragment
         android:id="@+id/attendanceHolderFragment"
@@ -114,6 +129,8 @@
         android:label="Attendance" >
         <argument
             android:name="subject"
+            app:nullable="true"
+            android:defaultValue="@null"
             app:argType="com.alamin.attendanceassistant.model.data.Subject" />
         <action
             android:id="@+id/action_attendanceHolderFragment_to_addStudentDialog"

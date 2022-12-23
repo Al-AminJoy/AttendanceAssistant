@@ -1,6 +1,7 @@
 package com.alamin.attendanceassistant.view_model
 
 import android.text.TextUtils
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alamin.attendanceassistant.di.qualifiers.SectionLocalQualifier
@@ -12,6 +13,8 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+
+private const val TAG = "SectionViewModel"
 
 @HiltViewModel
 class SectionViewModel @Inject constructor(@SectionLocalQualifier private val sectionLocalRepository: SectionLocalRepository): ViewModel() {
@@ -27,12 +30,14 @@ class SectionViewModel @Inject constructor(@SectionLocalQualifier private val se
     )
 
     fun getAllSectionByClass(classId:Int): StateFlow<List<Section>?> {
+        Log.d(TAG, "getAllSectionByClass: ${sectionLocalRepository.getSectionByClass(classId)}")
         return sectionLocalRepository.getSectionByClass(classId).stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(),
             null
         )
     }
+
 
     fun insertSection(classId: Int){
         val sectionName = inputSectionName.value

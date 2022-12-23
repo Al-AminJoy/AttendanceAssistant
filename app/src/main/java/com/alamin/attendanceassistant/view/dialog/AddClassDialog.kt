@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.alamin.attendanceassistant.R
 import com.alamin.attendanceassistant.databinding.FragmentAddClassDialogBinding
@@ -49,7 +50,10 @@ class AddClassDialog : DialogFragment() {
 
         lifecycleScope.launch {
             classViewModel.message.collect{
-                if (it.lowercase() == "Success".lowercase())  dismiss()
+                if (it.lowercase() == "Success".lowercase())  {
+                    findNavController().navigate(R.id.action_addClassDialog_to_homeFragment)
+                    dismiss()
+                }
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
         }

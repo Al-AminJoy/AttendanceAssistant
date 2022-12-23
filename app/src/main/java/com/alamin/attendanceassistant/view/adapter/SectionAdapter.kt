@@ -1,5 +1,6 @@
 package com.alamin.attendanceassistant.view.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -10,6 +11,8 @@ import com.alamin.attendanceassistant.model.data.Section
 import com.alamin.attendanceassistant.model.data.Subject
 import com.alamin.attendanceassistant.utils.ApplicationsCallBack
 import javax.inject.Inject
+
+private const val TAG = "SectionAdapter"
 
 class SectionAdapter @Inject constructor(private val sectionDiffUtils: SectionDiffUtils): RecyclerView.Adapter<SectionAdapter.SectionViewHolder>() {
 

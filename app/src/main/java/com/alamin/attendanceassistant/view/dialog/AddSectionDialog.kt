@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.alamin.attendanceassistant.R
 import com.alamin.attendanceassistant.databinding.FragmentAddSectionDialogBinding
@@ -35,22 +36,28 @@ class AddSectionDialog : DialogFragment() {
         binding.sectionViewModel = sectionViewModel
         binding.lifecycleOwner = this
 
-        if (arg.classModel == null){
+        if (arg.classId == 0){
             arg.section?.let { sectionViewModel.setSection(it) }
         }
 
         binding.setOnSectionSubmit {
-            if (arg.classModel == null){
+            if (arg.classId == 0){
                 arg.section?.let { sec -> sectionViewModel.updateSection(sec) }
 
             }else{
-                arg.classModel?.let { classModel -> sectionViewModel.insertSection(classModel.classId) }
+                arg.classId?.let { classId -> sectionViewModel.insertSection(classId) }
             }
         }
 
         lifecycleScope.launch {
             sectionViewModel.message.collect{
-                if (it.lowercase() == "Success".lowercase()) dismiss()
+                if (it.lowercase() == "Success".lowercase()) {
+                    if (arg.classId == 0){
+                        val action = AddSectionDialogDirections.actionAddSectionDialogToSectionFragment(arg.section!!.classId)
+                        findNavController().navigate(action)
+                    }
+                    dismiss()
+                }
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
         }

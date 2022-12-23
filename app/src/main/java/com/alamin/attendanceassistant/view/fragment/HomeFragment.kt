@@ -63,7 +63,7 @@ class HomeFragment : Fragment() {
                         setDiffUtils(ArrayList(it))
                         setCallBack(object : ApplicationsCallBack.SetOnAdapterItemClickListener<ClassModel> {
                             override fun onAdapterItemClick(classModel: ClassModel) {
-                                val action = HomeFragmentDirections.actionHomeFragmentToSectionFragment(classModel)
+                                val action = HomeFragmentDirections.actionHomeFragmentToSectionFragment(classModel.classId)
                                 findNavController().navigate(action)
                             }
 

@@ -23,10 +23,17 @@ class SectionDiffUtils @Inject constructor(): DiffUtil.Callback() {
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+
         return oldList[oldItemPosition].sectionId == newList[newItemPosition].sectionId
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition] == newList[newItemPosition]
+        //return oldList[oldItemPosition] == newList[newItemPosition]
+        return when{
+            oldList[oldItemPosition].sectionId != newList[newItemPosition].sectionId -> false
+            oldList[oldItemPosition].classId != newList[newItemPosition].classId -> false
+            oldList[oldItemPosition].sectionName != newList[newItemPosition].sectionName -> false
+            else -> true
+        }
     }
 }

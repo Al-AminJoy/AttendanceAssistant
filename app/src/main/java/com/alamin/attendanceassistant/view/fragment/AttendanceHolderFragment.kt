@@ -49,13 +49,15 @@ class AttendanceHolderFragment : Fragment() {
 
         subjectViewModel = ViewModelProvider(this)[SubjectViewModel::class.java]
 
-        lifecycleScope.launchWhenCreated {
-            subjectViewModel.getSubjectById(arg.subject.subjectId).collectLatest {
-                it?.let {
-                    subject = it
-                    attendanceFragment.setSubject(subject)
-                    reportFragment.setSubject(subject)
-                    studentListFragment.setSubject(subject)
+        arg.subject?.let {
+            lifecycleScope.launchWhenCreated {
+                subjectViewModel.getSubjectById(arg.subject!!.subjectId).collectLatest {
+                    it?.let {
+                        subject = it
+                        attendanceFragment.setSubject(subject)
+                        reportFragment.setSubject(subject)
+                        studentListFragment.setSubject(subject)
+                    }
                 }
             }
         }

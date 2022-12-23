@@ -48,15 +48,16 @@ class SectionFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         binding = FragmentSectionBinding.inflate(layoutInflater)
 
         sectionViewModel = ViewModelProvider(this)[SectionViewModel::class.java]
         subjectViewModel = ViewModelProvider(this)[SubjectViewModel::class.java]
 
         binding.setOnAddSectionClick {
-            val action = SectionFragmentDirections.actionSectionFragmentToAddSectionDialog(arg.classModel, null)
-            findNavController().navigate(action)
+            arg.classId?.let {
+                val action = SectionFragmentDirections.actionSectionFragmentToAddSectionDialog(arg.classId, null)
+                findNavController().navigate(action)
+            }
         }
 
         binding.recyclerView.apply {
@@ -70,49 +71,57 @@ class SectionFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launchWhenCreated {
-            sectionViewModel.getAllSectionByClass(arg.classModel.classId).collectLatest {
-                it?.let {
-                    with(sectionAdapter){
-                        setDiffUtils(ArrayList(it))
-                        setCallBack(object: ApplicationsCallBack.SetOnAdapterItemClickListener<Section>{
-                            override fun onAdapterItemClick(dataClass: Section) {
-                                val action = SectionFragmentDirections.actionSectionFragmentToSubjectFragment(dataClass)
-                                findNavController().navigate(action)
-                            }
+        arg.classId?.let {
+            lifecycleScope.launchWhenCreated{
+                sectionViewModel.getAllSectionByClass(arg.classId).collectLatest{
+                    Log.d(TAG, "onCreateView: $it")
 
-                        })
+                    it?.let {
+                        Log.d(TAG, "onCreateView: $it")
 
-                        setSectionOptionListener(object : ApplicationsCallBack.SetOnAdapterOptionItemClickListener<Section>{
-                            override fun onAdapterOptionItemClick(dataClass: Section, view: View) {
-                                customOptionMenu.showOptionMenu(view.context,view,object : ApplicationsCallBack.SetOnOptionMenuClickListener{
-                                    override fun onEdit() {
-                                        val action = SectionFragmentDirections.actionSectionFragmentToAddSectionDialog(null,dataClass)
-                                        findNavController().navigate(action)
-                                    }
+                        with(sectionAdapter){
+                            setDiffUtils(ArrayList(it))
+                            setCallBack(object: ApplicationsCallBack.SetOnAdapterItemClickListener<Section>{
+                                override fun onAdapterItemClick(dataClass: Section) {
+                                    Log.d(TAG, "onCreateView: $dataClass")
 
-                                    override fun onDelete() {
-                                        customAlertDialog.createDialog("Warning !",
-                                            "Do You Want to Remove Section ?",
-                                            R.color.theme,
-                                            object : ApplicationsCallBack.SetOnAlertDialogClickListener{
-                                                override fun onPositive() {
-                                                    hasSubject(dataClass)
-                                                }
+                                    val action = SectionFragmentDirections.actionSectionFragmentToSubjectFragment(dataClass)
+                                    findNavController().navigate(action)
+                                }
 
-                                                override fun onNegative() {
-                                                    Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show()
-                                                }
+                            })
 
-                                            })
-                                    }
+                            setSectionOptionListener(object : ApplicationsCallBack.SetOnAdapterOptionItemClickListener<Section>{
+                                override fun onAdapterOptionItemClick(dataClass: Section, view: View) {
+                                    customOptionMenu.showOptionMenu(view.context,view,object : ApplicationsCallBack.SetOnOptionMenuClickListener{
+                                        override fun onEdit() {
+                                            val action = SectionFragmentDirections.actionSectionFragmentToAddSectionDialog(0,dataClass)
+                                            findNavController().navigate(action)
+                                        }
 
-                                })
-                            }
+                                        override fun onDelete() {
+                                            customAlertDialog.createDialog("Warning !",
+                                                "Do You Want to Remove Section ?",
+                                                R.color.theme,
+                                                object : ApplicationsCallBack.SetOnAlertDialogClickListener{
+                                                    override fun onPositive() {
+                                                        hasSubject(dataClass)
+                                                    }
+
+                                                    override fun onNegative() {
+                                                        Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show()
+                                                    }
+
+                                                })
+                                        }
+
+                                    })
+                                }
 
 
-                        })
+                            })
 
+                        }
                     }
                 }
             }
@@ -144,5 +153,6 @@ class SectionFragment : Fragment() {
         }
 
     }
+
 
 }

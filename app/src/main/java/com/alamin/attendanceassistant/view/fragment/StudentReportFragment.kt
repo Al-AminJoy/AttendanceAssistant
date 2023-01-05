@@ -7,8 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.alamin.attendanceassistant.R
 import com.alamin.attendanceassistant.databinding.FragmentAttendanceHolderBinding
@@ -21,6 +23,7 @@ import com.alamin.attendanceassistant.view_model.AttendanceViewModel
 import com.alamin.attendanceassistant.view_model.SubjectViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "StudentReportFragment"
@@ -65,36 +68,42 @@ class StudentReportFragment @Inject constructor() : Fragment() {
 
         }
 
-        lifecycleScope.launchWhenCreated {
-            attendanceViewModel.present.collectLatest {
-                it.let {
-                    val totalClass = studentAttendanceList.size
-                    binding.totalClass = totalClass
-                    binding.presentClass = it
-                    binding.absentClass = totalClass - it
-                    binding.presentPercentage = Math.round(((it.toDouble()/totalClass.toDouble())*100)*100.0)/100.0
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                attendanceViewModel.present.collectLatest {
+                    it.let {
+                        val totalClass = studentAttendanceList.size
+                        binding.totalClass = totalClass
+                        binding.presentClass = it
+                        binding.absentClass = totalClass - it
+                        binding.presentPercentage = Math.round(((it.toDouble()/totalClass.toDouble())*100)*100.0)/100.0
+                    }
                 }
             }
         }
 
-        lifecycleScope.launchWhenCreated {
-            attendanceViewModel.getAttendanceBySubject(subject.subjectId).collectLatest {
-                it?.let {
-                    studentAttendanceList.clear()
-                    studentAttendanceList.addAll(it)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                attendanceViewModel.getAttendanceBySubject(subject.subjectId).collectLatest {
+                    it?.let {
+                        studentAttendanceList.clear()
+                        studentAttendanceList.addAll(it)
+                    }
                 }
             }
         }
 
-        lifecycleScope.launchWhenCreated {
-            subjectViewModel.getSubjectById(subject.subjectId).collectLatest {
-                it?.let {
-                    studentList = ArrayList(it.studentHolder.studentList
-                        .sortedBy { std -> std.studentId }
-                        .map { student -> "${student.studentId}. ${student.studentName}" })
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                subjectViewModel.getSubjectById(subject.subjectId).collectLatest {
+                    it?.let {
+                        studentList = ArrayList(it.studentHolder.studentList
+                            .sortedBy { std -> std.studentId }
+                            .map { student -> "${student.studentId}. ${student.studentName}" })
 
-                    var studentAdapter = ArrayAdapter(requireContext(),R.layout.row_student_dropdown,R.id.txtStudent,studentList)
-                    binding.txtStudent.setAdapter(studentAdapter)
+                        var studentAdapter = ArrayAdapter(requireContext(),R.layout.row_student_dropdown,R.id.txtStudent,studentList)
+                        binding.txtStudent.setAdapter(studentAdapter)
+                    }
                 }
             }
         }

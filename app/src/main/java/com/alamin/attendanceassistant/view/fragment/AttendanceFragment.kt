@@ -10,8 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,6 +31,7 @@ import com.alamin.attendanceassistant.view_model.SubjectViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -111,32 +114,34 @@ class AttendanceFragment @Inject constructor() : Fragment() {
             datePickerDialog.datePicker.setBackgroundColor(ContextCompat.getColor(requireContext(),R.color.white))
         }
 
-        lifecycleScope.launchWhenCreated {
-            attendanceViewModel.studentAttendanceFlowList.collectLatest {
-                it?.let {
-                    with(attendanceAdapter) {
-                        studentAttendanceList.clear()
-                        studentAttendanceList = ArrayList(it)
-                        setAdapterItemClickListener(object :
-                            ApplicationsCallBack.SetOnAttendanceClickListener<StudentAttendance> {
-                            override fun onAdapterItemClick(
-                                dataClass: StudentAttendance,
-                                isPresent: Boolean
-                            ) {
-                                val listIndex = studentAttendanceList.indexOf(dataClass)
-                                dataClass.isPresent = isPresent
-                                studentAttendanceList[listIndex] = dataClass
-                            }
-                        })
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                attendanceViewModel.studentAttendanceFlowList.collectLatest {
+                    it?.let {
+                        with(attendanceAdapter) {
+                            studentAttendanceList.clear()
+                            studentAttendanceList = ArrayList(it)
+                            setAdapterItemClickListener(object :
+                                ApplicationsCallBack.SetOnAttendanceClickListener<StudentAttendance> {
+                                override fun onAdapterItemClick(
+                                    dataClass: StudentAttendance,
+                                    isPresent: Boolean
+                                ) {
+                                    val listIndex = studentAttendanceList.indexOf(dataClass)
+                                    dataClass.isPresent = isPresent
+                                    studentAttendanceList[listIndex] = dataClass
+                                }
+                            })
 
-                        setDiffUtils(ArrayList(studentAttendanceList.sortedBy { studentAttendance -> studentAttendance.studentId }))
+                            setDiffUtils(ArrayList(studentAttendanceList.sortedBy { studentAttendance -> studentAttendance.studentId }))
 
+                        }
                     }
                 }
             }
         }
 
-        lifecycleScope.launchWhenCreated {
+        lifecycleScope.launch{
             attendanceViewModel.message.collect {
                 binding.hasDateChosen = it.lowercase() != "Success".lowercase()
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
@@ -158,18 +163,20 @@ class AttendanceFragment @Inject constructor() : Fragment() {
     }
 
     private fun getAttendance() {
-        lifecycleScope.launchWhenCreated {
-            attendanceViewModel.getAttendanceById(attendanceId)
-                .collectLatest {
-                    if (it == null) {
-                        attendanceViewModel.getStudentListOfAttendance(arrayListOf(), subject)
-                    } else {
-                        attendanceViewModel.getStudentListOfAttendance(
-                            ArrayList(it.studentAttendanceHolder.studentAttendanceList),
-                            subject
-                        )
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                attendanceViewModel.getAttendanceById(attendanceId)
+                    .collectLatest {
+                        if (it == null) {
+                            attendanceViewModel.getStudentListOfAttendance(arrayListOf(), subject)
+                        } else {
+                            attendanceViewModel.getStudentListOfAttendance(
+                                ArrayList(it.studentAttendanceHolder.studentAttendanceList),
+                                subject
+                            )
+                        }
                     }
-                }
+            }
         }
     }
 

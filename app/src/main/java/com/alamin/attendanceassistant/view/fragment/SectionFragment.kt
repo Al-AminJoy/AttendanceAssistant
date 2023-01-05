@@ -7,8 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -72,55 +74,57 @@ class SectionFragment : Fragment() {
         }
 
         arg.classId?.let {
-            lifecycleScope.launchWhenCreated{
-                sectionViewModel.getAllSectionByClass(arg.classId).collectLatest{
-                    Log.d(TAG, "onCreateView: $it")
-
-                    it?.let {
+            viewLifecycleOwner.lifecycleScope.launch{
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                    sectionViewModel.getAllSectionByClass(arg.classId).collectLatest{
                         Log.d(TAG, "onCreateView: $it")
 
-                        with(sectionAdapter){
-                            setDiffUtils(ArrayList(it))
-                            setCallBack(object: ApplicationsCallBack.SetOnAdapterItemClickListener<Section>{
-                                override fun onAdapterItemClick(dataClass: Section) {
-                                    Log.d(TAG, "onCreateView: $dataClass")
+                        it?.let {
+                            Log.d(TAG, "onCreateView: $it")
 
-                                    val action = SectionFragmentDirections.actionSectionFragmentToSubjectFragment(dataClass.sectionId)
-                                    findNavController().navigate(action)
-                                }
+                            with(sectionAdapter){
+                                setDiffUtils(ArrayList(it))
+                                setCallBack(object: ApplicationsCallBack.SetOnAdapterItemClickListener<Section>{
+                                    override fun onAdapterItemClick(dataClass: Section) {
+                                        Log.d(TAG, "onCreateView: $dataClass")
 
-                            })
+                                        val action = SectionFragmentDirections.actionSectionFragmentToSubjectFragment(dataClass.sectionId)
+                                        findNavController().navigate(action)
+                                    }
 
-                            setSectionOptionListener(object : ApplicationsCallBack.SetOnAdapterOptionItemClickListener<Section>{
-                                override fun onAdapterOptionItemClick(dataClass: Section, view: View) {
-                                    customOptionMenu.showOptionMenu(view.context,view,object : ApplicationsCallBack.SetOnOptionMenuClickListener{
-                                        override fun onEdit() {
-                                            val action = SectionFragmentDirections.actionSectionFragmentToAddSectionDialog(0,dataClass)
-                                            findNavController().navigate(action)
-                                        }
+                                })
 
-                                        override fun onDelete() {
-                                            customAlertDialog.createDialog("Warning !",
-                                                "Do You Want to Remove Section ?",
-                                                R.color.theme,
-                                                object : ApplicationsCallBack.SetOnAlertDialogClickListener{
-                                                    override fun onPositive() {
-                                                        hasSubject(dataClass)
-                                                    }
+                                setSectionOptionListener(object : ApplicationsCallBack.SetOnAdapterOptionItemClickListener<Section>{
+                                    override fun onAdapterOptionItemClick(dataClass: Section, view: View) {
+                                        customOptionMenu.showOptionMenu(view.context,view,object : ApplicationsCallBack.SetOnOptionMenuClickListener{
+                                            override fun onEdit() {
+                                                val action = SectionFragmentDirections.actionSectionFragmentToAddSectionDialog(0,dataClass)
+                                                findNavController().navigate(action)
+                                            }
 
-                                                    override fun onNegative() {
-                                                        Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show()
-                                                    }
+                                            override fun onDelete() {
+                                                customAlertDialog.createDialog("Warning !",
+                                                    "Do You Want to Remove Section ?",
+                                                    R.color.theme,
+                                                    object : ApplicationsCallBack.SetOnAlertDialogClickListener{
+                                                        override fun onPositive() {
+                                                            hasSubject(dataClass)
+                                                        }
 
-                                                })
-                                        }
+                                                        override fun onNegative() {
+                                                            Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show()
+                                                        }
 
-                                    })
-                                }
+                                                    })
+                                            }
+
+                                        })
+                                    }
 
 
-                            })
+                                })
 
+                            }
                         }
                     }
                 }
@@ -131,7 +135,8 @@ class SectionFragment : Fragment() {
     }
 
     private fun hasSubject(dataClass: Section) {
-        lifecycleScope.launchWhenCreated {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
                 subjectViewModel.getSubjectBySection(dataClass.sectionId).collectLatest {
                     it?.let {
                         Log.d(TAG, "hasSubject: ${it.size}")
@@ -149,7 +154,7 @@ class SectionFragment : Fragment() {
                         }
                     }
                 }
-
+            }
         }
 
     }

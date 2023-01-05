@@ -6,8 +6,10 @@ import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -74,81 +76,83 @@ class SubjectFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launchWhenCreated {
-            arg.sectionId?.let {
-                subjectViewModel.getSubjectBySection(arg.sectionId)
-                    .collectLatest { subjects ->
-                        Log.d(TAG, "onCreateView: $subjects")
-                        subjects?.let {
-                            with(subjectAdapter) {
-                                setSubjectListener(object :
-                                    ApplicationsCallBack.SetOnAdapterItemClickListener<Subject> {
-                                    override fun onAdapterItemClick(dataClass: Subject) {
-                                        val action =
-                                            SubjectFragmentDirections.actionSubjectFragmentToAttendanceHolderFragment(
-                                                dataClass.subjectId
-                                            )
-                                        findNavController().navigate(action)
-                                    }
-                                })
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                arg.sectionId?.let {
+                    subjectViewModel.getSubjectBySection(arg.sectionId)
+                        .collectLatest { subjects ->
+                            Log.d(TAG, "onCreateView: $subjects")
+                            subjects?.let {
+                                with(subjectAdapter) {
+                                    setSubjectListener(object :
+                                        ApplicationsCallBack.SetOnAdapterItemClickListener<Subject> {
+                                        override fun onAdapterItemClick(dataClass: Subject) {
+                                            val action =
+                                                SubjectFragmentDirections.actionSubjectFragmentToAttendanceHolderFragment(
+                                                    dataClass.subjectId
+                                                )
+                                            findNavController().navigate(action)
+                                        }
+                                    })
 
-                                setSubjectOptionListener(object :
-                                    ApplicationsCallBack.SetOnAdapterOptionItemClickListener<Subject> {
-                                    override fun onAdapterOptionItemClick(
-                                        dataClass: Subject,
-                                        view: View
-                                    ) {
-                                        customOptionMenu.showOptionMenu(
-                                            view.context,
-                                            view,
-                                            object :
-                                                ApplicationsCallBack.SetOnOptionMenuClickListener {
-                                                override fun onEdit() {
-                                                    val action =
-                                                        SubjectFragmentDirections.actionSubjectFragmentToAddSubjectDialog(
-                                                            0,
-                                                            dataClass
-                                                        )
-                                                    findNavController().navigate(action)
-                                                }
+                                    setSubjectOptionListener(object :
+                                        ApplicationsCallBack.SetOnAdapterOptionItemClickListener<Subject> {
+                                        override fun onAdapterOptionItemClick(
+                                            dataClass: Subject,
+                                            view: View
+                                        ) {
+                                            customOptionMenu.showOptionMenu(
+                                                view.context,
+                                                view,
+                                                object :
+                                                    ApplicationsCallBack.SetOnOptionMenuClickListener {
+                                                    override fun onEdit() {
+                                                        val action =
+                                                            SubjectFragmentDirections.actionSubjectFragmentToAddSubjectDialog(
+                                                                0,
+                                                                dataClass
+                                                            )
+                                                        findNavController().navigate(action)
+                                                    }
 
-                                                override fun onDelete() {
-                                                    customAlertDialog.createDialog("Warning !",
-                                                        "Do You Want to Remove Subject ?",
-                                                        R.color.theme,
-                                                        object :
-                                                            ApplicationsCallBack.SetOnAlertDialogClickListener {
-                                                            override fun onPositive() {
-                                                                subjectViewModel.deleteSubject(
-                                                                    dataClass.subjectId
-                                                                )
-                                                                attendanceViewModel.deleteAttendanceBySubject(
-                                                                    dataClass.subjectId
-                                                                )
-                                                            }
+                                                    override fun onDelete() {
+                                                        customAlertDialog.createDialog("Warning !",
+                                                            "Do You Want to Remove Subject ?",
+                                                            R.color.theme,
+                                                            object :
+                                                                ApplicationsCallBack.SetOnAlertDialogClickListener {
+                                                                override fun onPositive() {
+                                                                    subjectViewModel.deleteSubject(
+                                                                        dataClass.subjectId
+                                                                    )
+                                                                    attendanceViewModel.deleteAttendanceBySubject(
+                                                                        dataClass.subjectId
+                                                                    )
+                                                                }
 
-                                                            override fun onNegative() {
-                                                                Toast.makeText(
-                                                                    requireContext(),
-                                                                    "Cancelled",
-                                                                    Toast.LENGTH_SHORT
-                                                                ).show()
-                                                            }
+                                                                override fun onNegative() {
+                                                                    Toast.makeText(
+                                                                        requireContext(),
+                                                                        "Cancelled",
+                                                                        Toast.LENGTH_SHORT
+                                                                    ).show()
+                                                                }
 
-                                                        })
-                                                }
+                                                            })
+                                                    }
 
-                                            })
-                                    }
+                                                })
+                                        }
 
 
-                                })
+                                    })
 
-                                setDiffUtils(ArrayList(it))
+                                    setDiffUtils(ArrayList(it))
 
+                                }
                             }
                         }
-                    }
+                }
             }
         }
 

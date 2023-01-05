@@ -6,8 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.alamin.attendanceassistant.databinding.FragmentAttendanceHolderBinding
@@ -18,6 +20,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "AttendanceHolderFragment"
@@ -49,17 +52,21 @@ class AttendanceHolderFragment : Fragment() {
 
         subjectViewModel = ViewModelProvider(this)[SubjectViewModel::class.java]
 
-        lifecycleScope.launchWhenCreated {
+        viewLifecycleOwner.lifecycleScope.launch {
+
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
                 arg.subjectId?.let {
-                subjectViewModel.getSubjectById(arg.subjectId).collectLatest {
-                    it?.let {
-                        subject = it
-                        attendanceFragment.setSubject(subject)
-                        reportFragment.setSubject(subject)
-                        studentListFragment.setSubject(subject)
+                    subjectViewModel.getSubjectById(arg.subjectId).collectLatest {
+                        it?.let {
+                            subject = it
+                            attendanceFragment.setSubject(subject)
+                            reportFragment.setSubject(subject)
+                            studentListFragment.setSubject(subject)
+                        }
                     }
                 }
             }
+
         }
 
         binding.setOnAddStudent {

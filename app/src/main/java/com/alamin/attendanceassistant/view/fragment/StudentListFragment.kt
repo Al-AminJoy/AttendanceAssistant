@@ -10,8 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alamin.attendanceassistant.R
@@ -26,6 +28,7 @@ import com.alamin.attendanceassistant.view_model.SubjectViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "StudentListFragment"
@@ -58,44 +61,46 @@ class StudentListFragment @Inject constructor() : Fragment() {
             adapter = studentAdapter
         }
 
-        lifecycleScope.launchWhenCreated {
-            subjectViewModel.getSubjectById(subject.subjectId).collectLatest {
-                it?.let {
-                    with(studentAdapter) {
-                        setStudentDiffUtils(ArrayList(it.studentHolder.studentList.sortedBy { it.studentId }))
-                        setAdapterClickListener(object :
-                            ApplicationsCallBack.SetOnStudentClickListener<Student> {
-                            override fun onAdapterItemClick(dataClass: Student, isUpdate: Boolean) {
-                                if (isUpdate) {
-                                    val action =
-                                        AttendanceHolderFragmentDirections.actionAttendanceHolderFragmentToAddStudentDialog(
-                                            it,
-                                            dataClass
-                                        )
-                                    findNavController().navigate(action)
-                                } else {
-                                    customAlertDialog.createDialog("Warning!",
-                                        "Do You Want to Remove ?",
-                                        R.color.theme,
-                                        object :
-                                            ApplicationsCallBack.SetOnAlertDialogClickListener {
-                                            override fun onPositive() {
-                                                subjectViewModel.removeStudent(dataClass, subject)
-                                            }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                subjectViewModel.getSubjectById(subject.subjectId).collectLatest {
+                    it?.let {
+                        with(studentAdapter) {
+                            setStudentDiffUtils(ArrayList(it.studentHolder.studentList.sortedBy { it.studentId }))
+                            setAdapterClickListener(object :
+                                ApplicationsCallBack.SetOnStudentClickListener<Student> {
+                                override fun onAdapterItemClick(dataClass: Student, isUpdate: Boolean) {
+                                    if (isUpdate) {
+                                        val action =
+                                            AttendanceHolderFragmentDirections.actionAttendanceHolderFragmentToAddStudentDialog(
+                                                it,
+                                                dataClass
+                                            )
+                                        findNavController().navigate(action)
+                                    } else {
+                                        customAlertDialog.createDialog("Warning!",
+                                            "Do You Want to Remove ?",
+                                            R.color.theme,
+                                            object :
+                                                ApplicationsCallBack.SetOnAlertDialogClickListener {
+                                                override fun onPositive() {
+                                                    subjectViewModel.removeStudent(dataClass, subject)
+                                                }
 
-                                            override fun onNegative() {
-                                                Toast.makeText(
-                                                    requireContext(),
-                                                    "Cancelled",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                            }
+                                                override fun onNegative() {
+                                                    Toast.makeText(
+                                                        requireContext(),
+                                                        "Cancelled",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
 
-                                        })
+                                            })
+                                    }
                                 }
-                            }
 
-                        })
+                            })
+                        }
                     }
                 }
             }

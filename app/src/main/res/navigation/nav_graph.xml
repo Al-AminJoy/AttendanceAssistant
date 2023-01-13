@@ -22,10 +22,12 @@
     <dialog
         android:id="@+id/addClassDialog"
         android:name="com.alamin.attendanceassistant.view.dialog.AddClassDialog"
-        android:label="AddClassDialog" >
+        android:label="AddClassDialog">
         <action
             android:id="@+id/action_addClassDialog_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true"/>
         <argument
             android:name="classModel"
             app:argType="com.alamin.attendanceassistant.model.data.ClassModel"
@@ -101,7 +103,9 @@
             android:defaultValue="@null" />
         <action
             android:id="@+id/action_addSubjectDialog_to_subjectFragment"
-            app:destination="@id/subjectFragment" />
+            app:destination="@id/subjectFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@id/subjectFragment"/>
 
 
     </dialog>

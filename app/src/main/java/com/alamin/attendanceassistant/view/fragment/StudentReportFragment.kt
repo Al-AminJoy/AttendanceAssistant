@@ -20,6 +20,7 @@ import com.alamin.attendanceassistant.model.data.StudentAttendance
 import com.alamin.attendanceassistant.model.data.Subject
 import com.alamin.attendanceassistant.view.adapter.ViewPagerAdapter
 import com.alamin.attendanceassistant.view_model.AttendanceViewModel
+import com.alamin.attendanceassistant.view_model.StudentReportViewModel
 import com.alamin.attendanceassistant.view_model.SubjectViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -32,10 +33,8 @@ private const val TAG = "StudentReportFragment"
 class StudentReportFragment @Inject constructor() : Fragment() {
 
     private lateinit var binding: FragmentStudentReportBinding
-   // private var subjectId: Int = 0
-   private lateinit var subject: Subject
-    private lateinit var subjectViewModel: SubjectViewModel
-    private lateinit var attendanceViewModel: AttendanceViewModel
+    private lateinit var subject: Subject
+    private lateinit var viewModel: StudentReportViewModel
     private var studentList = ArrayList<String>()
     private var studentAttendanceList = arrayListOf<Attendance>()
 
@@ -52,8 +51,7 @@ class StudentReportFragment @Inject constructor() : Fragment() {
         binding.absentClass = 0
         binding.presentPercentage = 0.00
 
-        subjectViewModel = ViewModelProvider(this)[SubjectViewModel::class.java]
-        attendanceViewModel = ViewModelProvider(this)[AttendanceViewModel::class.java]
+        viewModel = ViewModelProvider(this)[StudentReportViewModel::class.java]
 
         binding.setOnStudentClick {
             binding.txtStudent.showDropDown()
@@ -64,13 +62,13 @@ class StudentReportFragment @Inject constructor() : Fragment() {
             val data = studentList[position].split(".")
             val selectedStudent = data[0].toInt()
 
-            attendanceViewModel.calculateAttendance(selectedStudent,studentAttendanceList)
+            viewModel.calculateAttendance(selectedStudent,studentAttendanceList)
 
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                attendanceViewModel.present.collectLatest {
+                viewModel.present.collectLatest {
                     it.let {
                         val totalClass = studentAttendanceList.size
                         binding.totalClass = totalClass
@@ -84,7 +82,7 @@ class StudentReportFragment @Inject constructor() : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                attendanceViewModel.getAttendanceBySubject(subject.subjectId).collectLatest {
+                viewModel.getAttendanceBySubject(subject.subjectId).collectLatest {
                     it?.let {
                         studentAttendanceList.clear()
                         studentAttendanceList.addAll(it)
@@ -95,7 +93,7 @@ class StudentReportFragment @Inject constructor() : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                subjectViewModel.getSubjectById(subject.subjectId).collectLatest {
+                viewModel.getSubjectById(subject.subjectId).collectLatest {
                     it?.let {
                         studentList = ArrayList(it.studentHolder.studentList
                             .sortedBy { std -> std.studentId }

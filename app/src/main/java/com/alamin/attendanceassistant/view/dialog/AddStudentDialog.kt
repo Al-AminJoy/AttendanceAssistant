@@ -30,14 +30,14 @@ class AddStudentDialog : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding  = FragmentAddStudentDialogBinding.inflate(layoutInflater)
+        binding = FragmentAddStudentDialogBinding.inflate(layoutInflater)
 
         subjectViewModel = ViewModelProvider(this)[SubjectViewModel::class.java]
 
         binding.subjectViewModel = subjectViewModel
         binding.lifecycleOwner = this
 
-        if (arg.student != null){
+        if (arg.student != null) {
             arg.student?.let {
                 subjectViewModel.setStudentData(it)
                 binding.layoutStudentId.isEnabled = false
@@ -45,19 +45,23 @@ class AddStudentDialog : DialogFragment() {
         }
 
         binding.setOnStudentSubmit {
-            if (arg.student == null){
+            if (arg.student == null) {
                 subjectViewModel.insertStudentBySubject(arg.subject)
-            }else{
-                subjectViewModel.updateStudentBySubject(arg.student!!,arg.subject)
+            } else {
+                subjectViewModel.updateStudentBySubject(arg.student!!, arg.subject)
             }
         }
 
         lifecycleScope.launch {
-            subjectViewModel.message.collect{
+            subjectViewModel.message.collect {
                 if (it.lowercase() == "Success".lowercase()) {
-                    val action = AddStudentDialogDirections.actionAddStudentDialogToAttendanceHolderFragment(arg.subject.subjectId)
+                    val action =
+                        AddStudentDialogDirections.actionAddStudentDialogToAttendanceHolderFragment(
+                            arg.subject.subjectId
+                        )
                     findNavController().navigate(action)
-                    dismiss()}
+                    dismiss()
+                }
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
         }
@@ -70,7 +74,7 @@ class AddStudentDialog : DialogFragment() {
         dialog?.let {
             val width: Int = ViewGroup.LayoutParams.MATCH_PARENT
             val height: Int = ViewGroup.LayoutParams.WRAP_CONTENT
-            it.window?.setLayout(width,height);
+            it.window?.setLayout(width, height);
         }
     }
 

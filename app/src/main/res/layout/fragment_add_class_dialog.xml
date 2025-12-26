@@ -13,7 +13,7 @@
 
         <variable
             name="classViewModel"
-            type="com.alamin.attendanceassistant.view_model.ClassViewModel" />
+            type="com.alamin.attendanceassistant.view_model.HomeViewModel" />
 
 
     </data>

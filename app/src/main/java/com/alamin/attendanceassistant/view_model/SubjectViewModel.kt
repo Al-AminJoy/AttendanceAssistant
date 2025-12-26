@@ -3,10 +3,12 @@ package com.alamin.attendanceassistant.view_model
 import android.text.TextUtils
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alamin.attendanceassistant.di.qualifiers.AttendanceLocalQualifier
 import com.alamin.attendanceassistant.di.qualifiers.SubjectLocalQualifier
 import com.alamin.attendanceassistant.model.data.Student
 import com.alamin.attendanceassistant.model.data.StudentHolder
 import com.alamin.attendanceassistant.model.data.Subject
+import com.alamin.attendanceassistant.model.repository.attendance_repository.AttendanceLocalRepository
 import com.alamin.attendanceassistant.model.repository.subject_repository.SubjectLocalRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
@@ -16,7 +18,8 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class SubjectViewModel @Inject constructor(@SubjectLocalQualifier private val subjectLocalRepository: SubjectLocalRepository ): ViewModel() {
+class SubjectViewModel @Inject constructor(@SubjectLocalQualifier private val subjectLocalRepository: SubjectLocalRepository,
+                                           @AttendanceLocalQualifier private val attendanceLocalRepository: AttendanceLocalRepository ): ViewModel() {
 
     val inputSubjectName = MutableStateFlow<String>("")
     val inputStudentId = MutableStateFlow<String>("")
@@ -106,7 +109,7 @@ class SubjectViewModel @Inject constructor(@SubjectLocalQualifier private val su
 
                     val studentList = arrayListOf<Student>()
 
-                    var removedStudentList = (ArrayList(subject.studentHolder.studentList))
+                    val removedStudentList = (ArrayList(subject.studentHolder.studentList))
                     removedStudentList.remove(removableStudent)
                     studentList.addAll(removedStudentList)
                     studentList.add(student)
@@ -121,20 +124,7 @@ class SubjectViewModel @Inject constructor(@SubjectLocalQualifier private val su
         }
     }
 
-    fun removeStudent(dataClass: Student, subject: Subject) {
 
-        viewModelScope.launch  {
-            withContext(IO){
-                var studentList = (ArrayList(subject.studentHolder.studentList))
-                studentList.remove(dataClass)
-                val studentHolder = StudentHolder(studentList)
-                subject.studentHolder = studentHolder
-                subjectLocalRepository.update(subject)
-            }
-            message.emit("Success")
-
-        }
-    }
 
     fun deleteSubject(subjectId: Int) {
         viewModelScope.launch {
@@ -161,6 +151,12 @@ class SubjectViewModel @Inject constructor(@SubjectLocalQualifier private val su
                 }
             }
             message.emit("Success")
+        }
+    }
+
+    fun deleteAttendanceBySubject(subjectId:Int){
+        viewModelScope.launch {
+            attendanceLocalRepository.deleteAttendanceBuSubjectId(subjectId)
         }
     }
 

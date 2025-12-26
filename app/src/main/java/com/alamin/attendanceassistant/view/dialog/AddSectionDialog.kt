@@ -17,6 +17,7 @@ import com.alamin.attendanceassistant.view_model.SectionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+
 @AndroidEntryPoint
 class AddSectionDialog : DialogFragment() {
 
@@ -36,24 +37,25 @@ class AddSectionDialog : DialogFragment() {
         binding.sectionViewModel = sectionViewModel
         binding.lifecycleOwner = this
 
-        if (arg.classId == 0){
+        if (arg.classId == 0) {
             arg.section?.let { sectionViewModel.setSection(it) }
         }
 
         binding.setOnSectionSubmit {
-            if (arg.classId == 0){
+            if (arg.classId == 0) {
                 arg.section?.let { sec -> sectionViewModel.updateSection(sec) }
 
-            }else{
+            } else {
                 arg.classId?.let { classId -> sectionViewModel.insertSection(classId) }
             }
         }
 
         lifecycleScope.launch {
-            sectionViewModel.message.collect{
+            sectionViewModel.message.collect {
                 if (it.lowercase() == "Success".lowercase()) {
-                    if (arg.classId == 0){
-                        val action = AddSectionDialogDirections.actionAddSectionDialogToSectionFragment(arg.section!!.classId)
+                    if (arg.classId == 0) {
+                        val action =
+                            AddSectionDialogDirections.actionAddSectionDialogToSectionFragment(arg.section!!.classId)
                         findNavController().navigate(action)
                     }
                     dismiss()

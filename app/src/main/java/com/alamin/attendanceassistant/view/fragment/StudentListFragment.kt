@@ -44,7 +44,7 @@ class StudentListFragment @Inject constructor() : Fragment() {
 
     private lateinit var binding: FragmentStudentListBinding
 
-    private lateinit var subjectViewModel: SubjectViewModel
+    private lateinit var viewModel: StudentViewModel
 
     private lateinit var subject: Subject
 
@@ -54,7 +54,7 @@ class StudentListFragment @Inject constructor() : Fragment() {
     ): View? {
         binding = FragmentStudentListBinding.inflate(layoutInflater)
 
-        subjectViewModel = ViewModelProvider(this)[SubjectViewModel::class.java]
+        viewModel = ViewModelProvider(this)[StudentViewModel::class.java]
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -63,7 +63,7 @@ class StudentListFragment @Inject constructor() : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                subjectViewModel.getSubjectById(subject.subjectId).collectLatest {
+                viewModel.getSubjectById(subject.subjectId).collectLatest {
                     it?.let {
                         with(studentAdapter) {
                             setStudentDiffUtils(ArrayList(it.studentHolder.studentList.sortedBy { it.studentId }))
@@ -84,7 +84,7 @@ class StudentListFragment @Inject constructor() : Fragment() {
                                             object :
                                                 ApplicationsCallBack.SetOnAlertDialogClickListener {
                                                 override fun onPositive() {
-                                                    subjectViewModel.removeStudent(dataClass, subject)
+                                                    viewModel.removeStudent(dataClass, subject)
                                                 }
 
                                                 override fun onNegative() {

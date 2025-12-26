@@ -37,14 +37,17 @@ private const val TAG = "SectionFragment"
 class SectionFragment : Fragment() {
     @Inject
     lateinit var sectionAdapter: SectionAdapter
+
     @Inject
     lateinit var customAlertDialog: CustomAlertDialog
+
     @Inject
-    lateinit var customOptionMenu : CustomOptionMenu
+    lateinit var customOptionMenu: CustomOptionMenu
 
     private lateinit var binding: FragmentSectionBinding
     private lateinit var sectionViewModel: SectionViewModel
-    private lateinit var subjectViewModel: SubjectViewModel
+
+    // private lateinit var subjectViewModel: SubjectViewModel
     private val arg by navArgs<SectionFragmentArgs>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,78 +56,93 @@ class SectionFragment : Fragment() {
         binding = FragmentSectionBinding.inflate(layoutInflater)
 
         sectionViewModel = ViewModelProvider(this)[SectionViewModel::class.java]
-        subjectViewModel = ViewModelProvider(this)[SubjectViewModel::class.java]
 
         binding.setOnAddSectionClick {
             arg.classId?.let {
-                val action = SectionFragmentDirections.actionSectionFragmentToAddSectionDialog(arg.classId, null)
+                val action = SectionFragmentDirections.actionSectionFragmentToAddSectionDialog(
+                    arg.classId,
+                    null
+                )
                 findNavController().navigate(action)
             }
         }
 
         binding.recyclerView.apply {
-            layoutManager = GridLayoutManager(requireContext(),2)
+            layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = sectionAdapter
         }
 
         lifecycleScope.launch {
-            sectionViewModel.message.collect{
+            sectionViewModel.message.collect {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
         }
 
-        arg.classId?.let {
-            viewLifecycleOwner.lifecycleScope.launch{
-                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                    sectionViewModel.getAllSectionByClass(arg.classId).collectLatest{
-                        Log.d(TAG, "onCreateView: $it")
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sectionViewModel.getAllSectionByClass(arg.classId).collectLatest {
+                    it?.let {
+                        with(sectionAdapter) {
+                            setDiffUtils(ArrayList(it))
+                            setCallBack(object :
+                                ApplicationsCallBack.SetOnAdapterItemClickListener<Section> {
+                                override fun onAdapterItemClick(dataClass: Section) {
+                                    val action =
+                                        SectionFragmentDirections.actionSectionFragmentToSubjectFragment(
+                                            dataClass.sectionId
+                                        )
+                                    findNavController().navigate(action)
+                                }
 
-                        it?.let {
-                            Log.d(TAG, "onCreateView: $it")
+                            })
 
-                            with(sectionAdapter){
-                                setDiffUtils(ArrayList(it))
-                                setCallBack(object: ApplicationsCallBack.SetOnAdapterItemClickListener<Section>{
-                                    override fun onAdapterItemClick(dataClass: Section) {
-                                        Log.d(TAG, "onCreateView: $dataClass")
-
-                                        val action = SectionFragmentDirections.actionSectionFragmentToSubjectFragment(dataClass.sectionId)
-                                        findNavController().navigate(action)
-                                    }
-
-                                })
-
-                                setSectionOptionListener(object : ApplicationsCallBack.SetOnAdapterOptionItemClickListener<Section>{
-                                    override fun onAdapterOptionItemClick(dataClass: Section, view: View) {
-                                        customOptionMenu.showOptionMenu(view.context,view,object : ApplicationsCallBack.SetOnOptionMenuClickListener{
+                            setSectionOptionListener(object :
+                                ApplicationsCallBack.SetOnAdapterOptionItemClickListener<Section> {
+                                override fun onAdapterOptionItemClick(
+                                    dataClass: Section,
+                                    view: View
+                                ) {
+                                    customOptionMenu.showOptionMenu(
+                                        view.context,
+                                        view,
+                                        object : ApplicationsCallBack.SetOnOptionMenuClickListener {
                                             override fun onEdit() {
-                                                val action = SectionFragmentDirections.actionSectionFragmentToAddSectionDialog(0,dataClass)
+                                                val action =
+                                                    SectionFragmentDirections.actionSectionFragmentToAddSectionDialog(
+                                                        0,
+                                                        dataClass
+                                                    )
                                                 findNavController().navigate(action)
                                             }
 
                                             override fun onDelete() {
-                                                customAlertDialog.createDialog("Warning !",
+                                                customAlertDialog.createDialog(
+                                                    "Warning !",
                                                     "Do You Want to Remove Section ?",
                                                     R.color.theme,
-                                                    object : ApplicationsCallBack.SetOnAlertDialogClickListener{
+                                                    object :
+                                                        ApplicationsCallBack.SetOnAlertDialogClickListener {
                                                         override fun onPositive() {
                                                             hasSubject(dataClass)
                                                         }
 
                                                         override fun onNegative() {
-                                                            Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show()
+                                                            Toast.makeText(
+                                                                requireContext(),
+                                                                "Cancelled",
+                                                                Toast.LENGTH_SHORT
+                                                            ).show()
                                                         }
 
                                                     })
                                             }
 
                                         })
-                                    }
+                                }
 
 
-                                })
+                            })
 
-                            }
                         }
                     }
                 }
@@ -136,14 +154,14 @@ class SectionFragment : Fragment() {
 
     private fun hasSubject(dataClass: Section) {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                subjectViewModel.getSubjectBySection(dataClass.sectionId).collectLatest {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                sectionViewModel.getSubjectBySection(dataClass.sectionId).collectLatest {
                     it?.let {
                         Log.d(TAG, "hasSubject: ${it.size}")
-                        if (it.isEmpty()){
+                        if (it.isEmpty()) {
                             sectionViewModel.deleteSection(dataClass.sectionId)
                             this.cancel()
-                        }else{
+                        } else {
                             Toast.makeText(
                                 requireContext(),
                                 "Please, Remove All Subject First",

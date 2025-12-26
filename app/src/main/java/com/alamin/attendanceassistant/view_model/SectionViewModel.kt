@@ -5,8 +5,11 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alamin.attendanceassistant.di.qualifiers.SectionLocalQualifier
+import com.alamin.attendanceassistant.di.qualifiers.SubjectLocalQualifier
 import com.alamin.attendanceassistant.model.data.Section
+import com.alamin.attendanceassistant.model.data.Subject
 import com.alamin.attendanceassistant.model.repository.section_repository.SectionLocalRepository
+import com.alamin.attendanceassistant.model.repository.subject_repository.SubjectLocalRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.*
@@ -17,19 +20,17 @@ import javax.inject.Inject
 private const val TAG = "SectionViewModel"
 
 @HiltViewModel
-class SectionViewModel @Inject constructor(@SectionLocalQualifier private val sectionLocalRepository: SectionLocalRepository): ViewModel() {
+class SectionViewModel @Inject constructor(
+    @SectionLocalQualifier private val sectionLocalRepository: SectionLocalRepository,
+    @SubjectLocalQualifier private val subjectLocalRepository: SubjectLocalRepository
+) : ViewModel() {
 
     val inputSectionName = MutableStateFlow<String>("")
 
     val message = MutableSharedFlow<String>()
 
-    val getAllSection: StateFlow<List<Section>?> = sectionLocalRepository.getAll().stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(),
-        null
-    )
 
-    fun getAllSectionByClass(classId:Int): StateFlow<List<Section>?> {
+    fun getAllSectionByClass(classId: Int): StateFlow<List<Section>?> {
         Log.d(TAG, "getAllSectionByClass: ${sectionLocalRepository.getSectionByClass(classId)}")
         return sectionLocalRepository.getSectionByClass(classId).stateIn(
             viewModelScope,
@@ -39,14 +40,14 @@ class SectionViewModel @Inject constructor(@SectionLocalQualifier private val se
     }
 
 
-    fun insertSection(classId: Int){
+    fun insertSection(classId: Int) {
         val sectionName = inputSectionName.value
         viewModelScope.launch {
-            if (TextUtils.isEmpty(sectionName) || sectionName == null){
+            if (TextUtils.isEmpty(sectionName) || sectionName == null) {
                 message.emit("Please, Input Name")
-            }else{
-                val section = Section(0,sectionName,classId)
-                withContext(IO){
+            } else {
+                val section = Section(0, sectionName, classId)
+                withContext(IO) {
                     sectionLocalRepository.create(section)
                 }
                 message.emit("Success")
@@ -57,7 +58,7 @@ class SectionViewModel @Inject constructor(@SectionLocalQualifier private val se
 
     fun deleteSection(sectionId: Int) {
         viewModelScope.launch {
-            withContext(IO){
+            withContext(IO) {
                 sectionLocalRepository.delete(sectionId)
             }
             message.emit("Success")
@@ -71,16 +72,25 @@ class SectionViewModel @Inject constructor(@SectionLocalQualifier private val se
     fun updateSection(section: Section) {
         val sectionName = inputSectionName.value
         viewModelScope.launch {
-            if (TextUtils.isEmpty(sectionName) || sectionName == null){
+            if (TextUtils.isEmpty(sectionName) || sectionName == null) {
                 message.emit("Please, Input Section name")
-            }else{
+            } else {
                 section.sectionName = sectionName
-                withContext(IO){
-                sectionLocalRepository.update(section) }
+                withContext(IO) {
+                    sectionLocalRepository.update(section)
+                }
 
             }
             message.emit("Success")
         }
     }
+
+    fun getSubjectBySection(sectionId: Int): StateFlow<List<Subject>?> = subjectLocalRepository
+        .getSubjectBySection(sectionId).stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(),
+            null
+        )
+
 
 }

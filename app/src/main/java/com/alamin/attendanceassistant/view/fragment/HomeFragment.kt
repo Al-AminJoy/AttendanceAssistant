@@ -16,12 +16,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.alamin.attendanceassistant.R
 import com.alamin.attendanceassistant.databinding.FragmentHomeBinding
 import com.alamin.attendanceassistant.model.data.ClassModel
-import com.alamin.attendanceassistant.model.data.Section
 import com.alamin.attendanceassistant.utils.ApplicationsCallBack
 import com.alamin.attendanceassistant.utils.CustomAlertDialog
 import com.alamin.attendanceassistant.utils.CustomOptionMenu
 import com.alamin.attendanceassistant.view.adapter.ClassAdapter
-import com.alamin.attendanceassistant.view_model.ClassViewModel
+import com.alamin.attendanceassistant.view_model.HomeViewModel
 import com.alamin.attendanceassistant.view_model.SectionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
@@ -30,18 +29,20 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "HomeFragment"
+
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     @Inject
     lateinit var classAdapter: ClassAdapter
+
     @Inject
     lateinit var customAlertDialog: CustomAlertDialog
-    @Inject
-    lateinit var customOptionMenu : CustomOptionMenu
 
-    private lateinit var classViewModel: ClassViewModel
-    private lateinit var sectionViewModel: SectionViewModel
+    @Inject
+    lateinit var customOptionMenu: CustomOptionMenu
+
+    private lateinit var viewModel: HomeViewModel
 
     private lateinit var binding: FragmentHomeBinding
 
@@ -51,53 +52,72 @@ class HomeFragment : Fragment() {
     ): View? {
         binding = FragmentHomeBinding.inflate(layoutInflater)
 
-        classViewModel = ViewModelProvider(this)[ClassViewModel::class.java]
-        sectionViewModel = ViewModelProvider(this)[SectionViewModel::class.java]
+        viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
 
         binding.recyclerView.apply {
-            layoutManager = GridLayoutManager(requireContext(),2)
+            layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = classAdapter
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                classViewModel.classList.collectLatest {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.classList.collectLatest {
                     it?.let {
-                        with(classAdapter){
+                        with(classAdapter) {
                             setDiffUtils(ArrayList(it))
-                            setCallBack(object : ApplicationsCallBack.SetOnAdapterItemClickListener<ClassModel> {
+                            setCallBack(object :
+                                ApplicationsCallBack.SetOnAdapterItemClickListener<ClassModel> {
                                 override fun onAdapterItemClick(classModel: ClassModel) {
-                                    val action = HomeFragmentDirections.actionHomeFragmentToSectionFragment(classModel.classId)
+                                    val action =
+                                        HomeFragmentDirections.actionHomeFragmentToSectionFragment(
+                                            classModel.classId
+                                        )
                                     findNavController().navigate(action)
                                 }
 
                             })
 
-                            setClassOptionListener(object : ApplicationsCallBack.SetOnAdapterOptionItemClickListener<ClassModel>{
-                                override fun onAdapterOptionItemClick(dataClass: ClassModel, view: View) {
-                                    customOptionMenu.showOptionMenu(view.context,view,object : ApplicationsCallBack.SetOnOptionMenuClickListener{
-                                        override fun onEdit() {
-                                            val action = HomeFragmentDirections.actionHomeFragmentToAddClassDialog(dataClass)
-                                            findNavController().navigate(action)
-                                        }
+                            setClassOptionListener(object :
+                                ApplicationsCallBack.SetOnAdapterOptionItemClickListener<ClassModel> {
+                                override fun onAdapterOptionItemClick(
+                                    dataClass: ClassModel,
+                                    view: View
+                                ) {
+                                    customOptionMenu.showOptionMenu(
+                                        view.context,
+                                        view,
+                                        object : ApplicationsCallBack.SetOnOptionMenuClickListener {
+                                            override fun onEdit() {
+                                                val action =
+                                                    HomeFragmentDirections.actionHomeFragmentToAddClassDialog(
+                                                        dataClass
+                                                    )
+                                                findNavController().navigate(action)
+                                            }
 
-                                        override fun onDelete() {
-                                            customAlertDialog.createDialog("Warning !",
-                                                "Do You Want to Remove Class ?",
-                                                R.color.theme,
-                                                object : ApplicationsCallBack.SetOnAlertDialogClickListener{
-                                                    override fun onPositive() {
-                                                        hasSection(dataClass)
-                                                    }
+                                            override fun onDelete() {
+                                                customAlertDialog.createDialog(
+                                                    "Warning !",
+                                                    "Do You Want to Remove Class ?",
+                                                    R.color.theme,
+                                                    object :
+                                                        ApplicationsCallBack.SetOnAlertDialogClickListener {
+                                                        override fun onPositive() {
+                                                            hasSection(dataClass)
+                                                        }
 
-                                                    override fun onNegative() {
-                                                        Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show()
-                                                    }
+                                                        override fun onNegative() {
+                                                            Toast.makeText(
+                                                                requireContext(),
+                                                                "Cancelled",
+                                                                Toast.LENGTH_SHORT
+                                                            ).show()
+                                                        }
 
-                                                })
-                                        }
+                                                    })
+                                            }
 
-                                    })
+                                        })
                                 }
 
 
@@ -119,14 +139,14 @@ class HomeFragment : Fragment() {
 
     private fun hasSection(dataClass: ClassModel) {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                sectionViewModel.getAllSectionByClass(dataClass.classId).collectLatest {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.getAllSectionByClass(dataClass.classId).collectLatest {
                     it?.let {
                         Log.d(TAG, "hasSubject: ${it.size}")
-                        if (it.isEmpty()){
-                            classViewModel.deleteClass(dataClass.classId)
+                        if (it.isEmpty()) {
+                            viewModel.deleteClass(dataClass.classId)
                             this.cancel()
-                        }else{
+                        } else {
                             Toast.makeText(
                                 requireContext(),
                                 "Please, Remove All Section First",

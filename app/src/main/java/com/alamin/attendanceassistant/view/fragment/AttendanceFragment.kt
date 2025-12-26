@@ -44,7 +44,6 @@ class AttendanceFragment @Inject constructor() : Fragment() {
     lateinit var attendanceAdapter: AttendanceAdapter
 
     private lateinit var binding: FragmentAttendanceBinding
-    private lateinit var subjectViewModel: SubjectViewModel
     private lateinit var attendanceViewModel: AttendanceViewModel
     private lateinit var subject: Subject
     private var studentAttendanceList = arrayListOf<StudentAttendance>()
@@ -60,7 +59,6 @@ class AttendanceFragment @Inject constructor() : Fragment() {
 
         binding.hasDateChosen = false
 
-        subjectViewModel = ViewModelProvider(this)[SubjectViewModel::class.java]
         attendanceViewModel = ViewModelProvider(this)[AttendanceViewModel::class.java]
         calendar = Calendar.getInstance()
 

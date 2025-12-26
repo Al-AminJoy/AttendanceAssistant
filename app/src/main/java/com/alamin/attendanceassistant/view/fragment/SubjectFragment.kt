@@ -42,8 +42,7 @@ class SubjectFragment : Fragment() {
     lateinit var customOptionMenu: CustomOptionMenu
 
     private lateinit var binding: FragmentSubjectBinding
-    private lateinit var subjectViewModel: SubjectViewModel
-    private lateinit var attendanceViewModel: AttendanceViewModel
+    private lateinit var viewModel: SubjectViewModel
     private val arg by navArgs<SubjectFragmentArgs>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,18 +50,15 @@ class SubjectFragment : Fragment() {
     ): View? {
         binding = FragmentSubjectBinding.inflate(layoutInflater)
 
-        subjectViewModel = ViewModelProvider(this)[SubjectViewModel::class.java]
-        attendanceViewModel = ViewModelProvider(this)[AttendanceViewModel::class.java]
+        viewModel = ViewModelProvider(this)[SubjectViewModel::class.java]
 
 
         binding.setOnAddSubjectClick {
-            arg.sectionId?.let {
                 val action = SubjectFragmentDirections.actionSubjectFragmentToAddSubjectDialog(
                     arg.sectionId,
                     null
                 )
                 findNavController().navigate(action)
-            }
         }
 
         binding.recyclerView.apply {
@@ -71,17 +67,15 @@ class SubjectFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            subjectViewModel.message.collect {
+            viewModel.message.collect {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                arg.sectionId?.let {
-                    subjectViewModel.getSubjectBySection(arg.sectionId)
+                    viewModel.getSubjectBySection(arg.sectionId)
                         .collectLatest { subjects ->
-                            Log.d(TAG, "onCreateView: $subjects")
                             subjects?.let {
                                 with(subjectAdapter) {
                                     setSubjectListener(object :
@@ -122,10 +116,10 @@ class SubjectFragment : Fragment() {
                                                             object :
                                                                 ApplicationsCallBack.SetOnAlertDialogClickListener {
                                                                 override fun onPositive() {
-                                                                    subjectViewModel.deleteSubject(
+                                                                    viewModel.deleteSubject(
                                                                         dataClass.subjectId
                                                                     )
-                                                                    attendanceViewModel.deleteAttendanceBySubject(
+                                                                    viewModel.deleteAttendanceBySubject(
                                                                         dataClass.subjectId
                                                                     )
                                                                 }
@@ -154,7 +148,6 @@ class SubjectFragment : Fragment() {
                         }
                 }
             }
-        }
 
         return binding.root
     }

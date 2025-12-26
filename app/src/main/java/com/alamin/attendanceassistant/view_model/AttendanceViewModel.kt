@@ -4,11 +4,13 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alamin.attendanceassistant.di.qualifiers.AttendanceLocalQualifier
+import com.alamin.attendanceassistant.di.qualifiers.SubjectLocalQualifier
 import com.alamin.attendanceassistant.model.data.Attendance
 import com.alamin.attendanceassistant.model.data.StudentAttendance
 import com.alamin.attendanceassistant.model.data.StudentAttendanceHolder
 import com.alamin.attendanceassistant.model.data.Subject
 import com.alamin.attendanceassistant.model.repository.attendance_repository.AttendanceLocalRepository
+import com.alamin.attendanceassistant.model.repository.subject_repository.SubjectLocalRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.*
@@ -21,24 +23,14 @@ private const val TAG = "AttendanceViewModel"
 class AttendanceViewModel @Inject constructor(@AttendanceLocalQualifier private val attendanceLocalRepository: AttendanceLocalRepository): ViewModel() {
 
     val message = MutableSharedFlow<String>()
-    val present = MutableSharedFlow<Int>()
 
     var studentAttendanceFlowList: MutableStateFlow<List<StudentAttendance>?> = MutableStateFlow(null)
-
 
     fun getAttendanceById(attendanceId: String): StateFlow<Attendance?> =
         attendanceLocalRepository.getAttendanceByAttendanceId(attendanceId).stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(),
             null)
-
-
-    fun getAttendanceBySubject(subjectId:Int): Flow<List<Attendance>?> =
-        attendanceLocalRepository.getAttendanceBySubject(subjectId).stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(),
-            null
-        )
 
 
     fun getStudentListOfAttendance(studentList: ArrayList<StudentAttendance>,subject: Subject) {
@@ -78,42 +70,12 @@ class AttendanceViewModel @Inject constructor(@AttendanceLocalQualifier private 
         }
 
     }
-
     fun createAttendance(attendanceId: String, studentAttendanceList: ArrayList<StudentAttendance>, subjectId: Int) {
         viewModelScope.launch(IO) {
             val studentAttendanceHolder = StudentAttendanceHolder(studentAttendanceList)
             val attendance = Attendance(attendanceId,studentAttendanceHolder,subjectId)
             attendanceLocalRepository.create(attendance)
             message.emit("Success")
-        }
-    }
-
-    fun calculateAttendance(selectedStudent: Int, studentAttendanceList: ArrayList<Attendance>) {
-
-        var classCount = studentAttendanceList.size
-        var presentCount = 0
-
-        for (attendance in studentAttendanceList){
-
-            for (studentAttendance in attendance.studentAttendanceHolder.studentAttendanceList){
-                if (studentAttendance.studentId == selectedStudent && studentAttendance.isPresent){
-                    presentCount++
-                }
-            }
-        }
-
-        viewModelScope.launch {
-            present.emit(presentCount)
-        }
-
-
-        Log.d(TAG, "onCreateView: $classCount $presentCount")
-
-    }
-
-    fun deleteAttendanceBySubject(subjectId:Int){
-        viewModelScope.launch {
-            attendanceLocalRepository.deleteAttendanceBuSubjectId(subjectId)
         }
     }
 

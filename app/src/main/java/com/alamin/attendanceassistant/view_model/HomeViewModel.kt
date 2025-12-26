@@ -1,12 +1,15 @@
 package com.alamin.attendanceassistant.view_model
 
 import android.text.TextUtils
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alamin.attendanceassistant.di.qualifiers.ClassLocalQualifier
+import com.alamin.attendanceassistant.di.qualifiers.SectionLocalQualifier
 import com.alamin.attendanceassistant.model.data.ClassModel
-import com.alamin.attendanceassistant.model.data.Subject
+import com.alamin.attendanceassistant.model.data.Section
 import com.alamin.attendanceassistant.model.repository.class_repository.ClassLocalRepository
+import com.alamin.attendanceassistant.model.repository.section_repository.SectionLocalRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.*
@@ -17,7 +20,8 @@ import javax.inject.Inject
 private const val TAG = "ClassViewModel"
 
 @HiltViewModel
-class ClassViewModel @Inject constructor(@ClassLocalQualifier private val repository: ClassLocalRepository): ViewModel() {
+class HomeViewModel @Inject constructor(@ClassLocalQualifier private val repository: ClassLocalRepository,
+                                        @SectionLocalQualifier private val sectionLocalRepository: SectionLocalRepository): ViewModel() {
 
     val message = MutableSharedFlow<String>()
     val inputClassName = MutableStateFlow<String>("")
@@ -45,6 +49,15 @@ class ClassViewModel @Inject constructor(@ClassLocalQualifier private val reposi
         }
     }
 
+    fun getAllSectionByClass(classId:Int): StateFlow<List<Section>?> {
+        Log.d(TAG, "getAllSectionByClass: ${sectionLocalRepository.getSectionByClass(classId)}")
+        return sectionLocalRepository.getSectionByClass(classId).stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(),
+            null
+        )
+    }
+
     fun deleteClass(classId: Int) {
             viewModelScope.launch {
                 withContext(IO){
@@ -54,6 +67,7 @@ class ClassViewModel @Inject constructor(@ClassLocalQualifier private val reposi
             }
 
     }
+
 
     fun setClass(classModel: ClassModel) {
         inputClassName.value = classModel.className

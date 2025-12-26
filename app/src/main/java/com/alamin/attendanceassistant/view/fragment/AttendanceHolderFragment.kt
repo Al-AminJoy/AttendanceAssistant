@@ -15,6 +15,7 @@ import androidx.navigation.fragment.navArgs
 import com.alamin.attendanceassistant.databinding.FragmentAttendanceHolderBinding
 import com.alamin.attendanceassistant.model.data.Subject
 import com.alamin.attendanceassistant.view.adapter.ViewPagerAdapter
+import com.alamin.attendanceassistant.view_model.AttendanceHolderViewModel
 import com.alamin.attendanceassistant.view_model.SubjectViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -39,7 +40,7 @@ class AttendanceHolderFragment : Fragment() {
 
     private lateinit var binding: FragmentAttendanceHolderBinding
     private val arg by navArgs<AttendanceHolderFragmentArgs>()
-    private lateinit var subjectViewModel: SubjectViewModel
+    private lateinit var viewModel: AttendanceHolderViewModel
 
     private lateinit var subject: Subject
 
@@ -50,19 +51,17 @@ class AttendanceHolderFragment : Fragment() {
     ): View? {
         binding = FragmentAttendanceHolderBinding.inflate(layoutInflater)
 
-        subjectViewModel = ViewModelProvider(this)[SubjectViewModel::class.java]
+        viewModel = ViewModelProvider(this)[AttendanceHolderViewModel::class.java]
 
         viewLifecycleOwner.lifecycleScope.launch {
 
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                arg.subjectId?.let {
-                    subjectViewModel.getSubjectById(arg.subjectId).collectLatest {
-                        it?.let {
-                            subject = it
-                            attendanceFragment.setSubject(subject)
-                            reportFragment.setSubject(subject)
-                            studentListFragment.setSubject(subject)
-                        }
+                viewModel.getSubjectById(arg.subjectId).collectLatest {
+                    it?.let {
+                        subject = it
+                        attendanceFragment.setSubject(subject)
+                        reportFragment.setSubject(subject)
+                        studentListFragment.setSubject(subject)
                     }
                 }
             }

@@ -1,7 +1,6 @@
 package com.alamin.attendanceassistant.view.dialog
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,11 +10,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.alamin.attendanceassistant.R
 import com.alamin.attendanceassistant.databinding.FragmentAddSubjectDialogBinding
-import com.alamin.attendanceassistant.view_model.SubjectViewModel
+import com.alamin.attendanceassistant.viewmodel.SubjectViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint

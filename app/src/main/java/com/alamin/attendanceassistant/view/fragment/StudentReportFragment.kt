@@ -1,7 +1,6 @@
 package com.alamin.attendanceassistant.view.fragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,17 +10,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.alamin.attendanceassistant.R
-import com.alamin.attendanceassistant.databinding.FragmentAttendanceHolderBinding
 import com.alamin.attendanceassistant.databinding.FragmentStudentReportBinding
 import com.alamin.attendanceassistant.model.data.Attendance
-import com.alamin.attendanceassistant.model.data.StudentAttendance
 import com.alamin.attendanceassistant.model.data.Subject
-import com.alamin.attendanceassistant.view.adapter.ViewPagerAdapter
-import com.alamin.attendanceassistant.view_model.AttendanceViewModel
-import com.alamin.attendanceassistant.view_model.StudentReportViewModel
-import com.alamin.attendanceassistant.view_model.SubjectViewModel
+import com.alamin.attendanceassistant.viewmodel.StudentReportViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

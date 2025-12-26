@@ -17,15 +17,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.alamin.attendanceassistant.R
 import com.alamin.attendanceassistant.databinding.FragmentSectionBinding
 import com.alamin.attendanceassistant.model.data.Section
-import com.alamin.attendanceassistant.model.data.Subject
 import com.alamin.attendanceassistant.utils.ApplicationsCallBack
 import com.alamin.attendanceassistant.utils.CustomAlertDialog
 import com.alamin.attendanceassistant.utils.CustomOptionMenu
 import com.alamin.attendanceassistant.view.adapter.SectionAdapter
-import com.alamin.attendanceassistant.view_model.SectionViewModel
-import com.alamin.attendanceassistant.view_model.SubjectViewModel
+import com.alamin.attendanceassistant.viewmodel.SectionViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

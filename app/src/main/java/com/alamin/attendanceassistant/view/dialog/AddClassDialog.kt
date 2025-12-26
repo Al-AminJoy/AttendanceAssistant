@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.alamin.attendanceassistant.R
 import com.alamin.attendanceassistant.databinding.FragmentAddClassDialogBinding
-import com.alamin.attendanceassistant.view_model.HomeViewModel
+import com.alamin.attendanceassistant.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

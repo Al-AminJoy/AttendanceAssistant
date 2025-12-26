@@ -15,9 +15,7 @@ import androidx.navigation.fragment.navArgs
 import com.alamin.attendanceassistant.databinding.FragmentAttendanceHolderBinding
 import com.alamin.attendanceassistant.model.data.Subject
 import com.alamin.attendanceassistant.view.adapter.ViewPagerAdapter
-import com.alamin.attendanceassistant.view_model.AttendanceHolderViewModel
-import com.alamin.attendanceassistant.view_model.SubjectViewModel
-import com.google.android.material.tabs.TabLayout
+import com.alamin.attendanceassistant.viewmodel.AttendanceHolderViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest

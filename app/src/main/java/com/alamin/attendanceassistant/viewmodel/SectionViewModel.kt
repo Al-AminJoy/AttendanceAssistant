@@ -1,4 +1,4 @@
-package com.alamin.attendanceassistant.view_model
+package com.alamin.attendanceassistant.viewmodel
 
 import android.text.TextUtils
 import android.util.Log

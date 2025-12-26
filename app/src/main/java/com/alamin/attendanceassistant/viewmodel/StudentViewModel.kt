@@ -1,13 +1,11 @@
-package com.alamin.attendanceassistant.view_model
+package com.alamin.attendanceassistant.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alamin.attendanceassistant.di.qualifiers.StudentLocalQualifier
 import com.alamin.attendanceassistant.di.qualifiers.SubjectLocalQualifier
 import com.alamin.attendanceassistant.model.data.Student
 import com.alamin.attendanceassistant.model.data.StudentHolder
 import com.alamin.attendanceassistant.model.data.Subject
-import com.alamin.attendanceassistant.model.repository.student_repository.StudentLocalRepository
 import com.alamin.attendanceassistant.model.repository.subject_repository.SubjectLocalRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO

@@ -1,22 +1,16 @@
-package com.alamin.attendanceassistant.view_model
+package com.alamin.attendanceassistant.viewmodel
 
-import android.text.TextUtils
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alamin.attendanceassistant.di.qualifiers.AttendanceLocalQualifier
 import com.alamin.attendanceassistant.di.qualifiers.SubjectLocalQualifier
 import com.alamin.attendanceassistant.model.data.Attendance
-import com.alamin.attendanceassistant.model.data.Student
-import com.alamin.attendanceassistant.model.data.StudentHolder
 import com.alamin.attendanceassistant.model.data.Subject
 import com.alamin.attendanceassistant.model.repository.attendance_repository.AttendanceLocalRepository
 import com.alamin.attendanceassistant.model.repository.subject_repository.SubjectLocalRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel

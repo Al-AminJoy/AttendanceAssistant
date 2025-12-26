@@ -6,7 +6,7 @@
     <data>
 
         <import type="android.view.View.OnClickListener"/>
-        <import type="com.alamin.attendanceassistant.view_model.SubjectViewModel"/>
+        <import type="com.alamin.attendanceassistant.viewmodel.SubjectViewModel"/>
 
         <variable
             name="onStudentSubmit"

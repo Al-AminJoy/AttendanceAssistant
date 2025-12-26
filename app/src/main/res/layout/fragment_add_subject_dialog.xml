@@ -13,7 +13,7 @@
 
         <variable
             name="subjectViewModel"
-            type="com.alamin.attendanceassistant.view_model.SubjectViewModel" />
+            type="com.alamin.attendanceassistant.viewmodel.SubjectViewModel" />
 
     </data>
 

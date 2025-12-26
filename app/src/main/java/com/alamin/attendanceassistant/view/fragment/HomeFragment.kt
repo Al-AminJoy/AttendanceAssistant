@@ -20,8 +20,7 @@ import com.alamin.attendanceassistant.utils.ApplicationsCallBack
 import com.alamin.attendanceassistant.utils.CustomAlertDialog
 import com.alamin.attendanceassistant.utils.CustomOptionMenu
 import com.alamin.attendanceassistant.view.adapter.ClassAdapter
-import com.alamin.attendanceassistant.view_model.HomeViewModel
-import com.alamin.attendanceassistant.view_model.SectionViewModel
+import com.alamin.attendanceassistant.viewmodel.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest

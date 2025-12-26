@@ -1,10 +1,8 @@
 package com.alamin.attendanceassistant.view.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
-import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -20,10 +18,8 @@ import com.alamin.attendanceassistant.utils.ApplicationsCallBack
 import com.alamin.attendanceassistant.utils.CustomAlertDialog
 import com.alamin.attendanceassistant.utils.CustomOptionMenu
 import com.alamin.attendanceassistant.view.adapter.SubjectAdapter
-import com.alamin.attendanceassistant.view_model.AttendanceViewModel
-import com.alamin.attendanceassistant.view_model.SubjectViewModel
+import com.alamin.attendanceassistant.viewmodel.SubjectViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject

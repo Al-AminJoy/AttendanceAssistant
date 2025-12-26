@@ -10,11 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.alamin.attendanceassistant.R
 import com.alamin.attendanceassistant.databinding.FragmentAddStudentDialogBinding
-import com.alamin.attendanceassistant.view_model.AttendanceViewModel
-import com.alamin.attendanceassistant.view_model.StudentViewModel
-import com.alamin.attendanceassistant.view_model.SubjectViewModel
+import com.alamin.attendanceassistant.viewmodel.SubjectViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
